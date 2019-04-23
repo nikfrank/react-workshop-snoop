@@ -9,7 +9,7 @@ Agenda:
 - [step 2: give'm what they want - text input](#step2)
 - [step 3: break'm off somethin - drop downs](#step3)
 - [step 4: and it's gotta be bumpin - refactor to components](#step4)
-- [step 5: menu layout](#step5)
+- [step 5: city of compton - notifications and animations](#step5)
 
 
 ## getting started
