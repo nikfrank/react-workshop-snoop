@@ -355,7 +355,7 @@ where we had
 we can put (be careful to put the spaces around the `-`)
 
 ```css
-  width: calc(100% = 4px);
+  width: calc(100% - 4px);
 ```
 
 now let's add an underline like in the design spec
