@@ -355,7 +355,7 @@ where we had
 we can put (be careful to put the spaces around the `-`)
 
 ```css
-  width: calc(100% - 4px);
+  width: calc(100% - 14px);
 ```
 
 now let's add an underline like in the design spec
@@ -615,6 +615,7 @@ that's great and all, but maybe it shouldn't show up while we're typing!
 
 let's use the same trick as last time, but now with the [general sibling selector](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator) to `display: none;` the invalidation message while the `input` is `:focus`
 
+and the [:not() pseudoselector](https://developer.mozilla.org/en-US/docs/Web/CSS/:not) to style it otherwise
 
 <sub>./src/App.css</sub>
 ```css
