@@ -17,10 +17,10 @@ class App extends Component {
     return (
       <div className="App">
         <div className="form">
-          <div className="card">
+          <div className="card swanky-input-container">
             <label>
-              Rap Name
               <input value={this.state.rapName} onChange={this.setRapName} />
+              <span>Rap Name</span>
             </label>
           </div>
 

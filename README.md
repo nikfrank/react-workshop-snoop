@@ -168,15 +168,334 @@ This pattern is standard in React and goes by the name: [controlled input patter
 //...
 ```
 
-### label and containers
+### card container for form input
 
 Snoop wants his form elements to be stylish as well as functional
 
 Let's make a card (like in [material design](https://material-ui.com/demos/cards/))
 
+first we'll wrap our `<input />` with a container (.card) `<div>...</div>`
+
+<sub>./src/App.js</sub>
+```html
+//...
+  render(){
+    return (
+      <div className='App'>
+        <div className="card">
+          <input value={this.state.rapName} onChange={this.setRapName}/>
+        </div>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+
+//...
+```
+
+and style `.card` to be the size we want (using min-* and max-* height/width is a responsive best practice)
+
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.card {
+  min-width: 300px;
+  min-height: 80px;
+
+  margin: 10px;
+}
+```
+
+and we can add a bit of `box-shadow` to give the card a bit of pop
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.card {
+  min-width: 300px;
+  min-height: 80px;
+
+  margin: 10px;
+  
+  box-shadow:
+  0px 1px 3px 0px rgba(0,0,0,0.2),
+  0px 1px 1px 0px rgba(0,0,0,0.14),
+  0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+```
+
+we'll be reusing this `.card` container for the rest of our form elements!
+
 
 ### floating label
-### card container for form input
+
+Now we need to make it clear to the user what this input is for!
+
+let's add a `<label>...</label>` around it (wrapping with `<label/>` means the user clicking on the label focuses the `<input/>`)
+
+
+<sub>./src/App.js</sub>
+```html
+//...
+  render(){
+    return (
+      <div className='App'>
+        <div className="card">
+          <label>
+            Rap Name
+            <input value={this.state.rapName} onChange={this.setRapName}/>
+          </label>
+        </div>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+
+//...
+```
+
+Snoop wants it [swanky](https://material-ui.com/demos/text-fields/)
+
+
+#### position: absolute;
+
+to accomplish this, we'll need to have a [position: relative](https://www.google.com/search?q=position+relative) container `<div/>` and [position: absolute](https://www.google.com/search?q=position+absolute) children
+
+<sub>./src/App.js</sub>
+```html
+//...
+  render(){
+    return (
+      <div className='App'>
+        <div className="card swanky-input-container">
+          <label>
+            <input value={this.state.rapName} onChange={this.setRapName}/>
+            <span>Rap Name</span>
+          </label>
+        </div>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+
+//...
+```
+
+we'll see later why the label text moved into a `<span>` and why it comes after the `<input/>`
+
+[or you can read ahead on sibling selectors and see if you can figure it out yourself](https://developer.mozilla.org/en-US/docs/Web/CSS/Adjacent_sibling_combinator)
+
+
+#### flat input
+
+we'll style the `<input/>` first, then move on to the label text
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container {
+  position: relative;
+}
+
+.swanky-input-container input {
+  position: absolute;
+  
+  bottom: 2px;
+  left: 2px;
+}
+
+```
+
+now we can get rid of the border and set the size
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container {
+  position: relative;
+}
+
+.swanky-input-container input {
+  position: absolute;
+  border: none;
+  
+  bottom: 2px;
+  left: 2px;
+  width: 100%;
+  height: 60px;
+
+  font-size: 22px;
+  padding-left: 10px;
+
+}
+
+```
+
+!!! oh no, our input is too wide... why is that?
+
+open up the computed styles panel (right click the input -> Inspect Element... Computed panel) to review
+
+we can see that we have 2px of position on the left, 10px of padding on the left (we put that in so our text would look good, but it adds to the total box width)
+
+so we want our `<input />` to be 14px (2px left + 2px right + 10px padding) less than 100%
+
+luckily, CSS3 added the [calc function](https://developer.mozilla.org/en-US/docs/Web/CSS/calc) for this exact case
+
+where we had
+
+```css
+  width: 100%;
+```
+
+we can put (be careful to put the spaces around the `-`)
+
+```css
+  width: calc(100% = 4px);
+```
+
+now let's add an underline like in the design spec
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container input {
+  position: absolute;
+  border: none;
+  border-bottom: 1px solid black;
+  //...
+  
+```
+
+#### :focus, transition
+
+when the input is `:focus`ed (the user is typing in it), we want the underline to be green and that pesky outline to go away.
+
+we'll use the [:focus pseudoselector](https://www.google.com/search?q=focus+pseudoselector) to style the input while it is `:focus`ed
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container input:focus {
+  outline: none;
+  font-size: 30px;
+  border-bottom: 2px solid green;
+}
+```
+
+I've also increased the size of the text.
+
+last thing, we want to apply a [css transition](https://www.w3schools.com/css/css3_transitions.asp) to the font-size
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container input {
+  position: absolute;
+  border: none;
+  border-bottom: 1px solid black;
+  
+  bottom: 2px;
+  left: 2px;
+  width: 100%;
+  height: 60px;
+
+  font-size: 22px;
+  padding-left: 10px;
+
+  transition: font-size 0.25s;
+}
+
+//...
+```
+
+great, now we can style the label
+
+
+
+#### absolute label
+
+now we can position the label properly (in the top left of the container)
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container span {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+  
+  font-weight: 300;
+  font-size: 16px;
+}
+```
+
+I've also updated the `cursor` so it appears clickable to the user
+
+and set the font how I think looks good.
+
+
+### label transitions on input:focus
+
+now we'll see why we had to put the label text in a `<span>`
+
+we want to change the `font-size` and `color` of the label text when the `<input/>` is `:focus`ed
+
+the way we'll do that is by making a selector:
+
+```
+select the .swanky-input-container class's child
+which is a span
+which comes AFTER a :focused input
+```
+
+which looks like
+
+<sub>./src/App.css</sub>
+```css
+.swanky-input-container input:focus + span {
+  color: green;
+  font-size: 12px;
+}
+```
+
+since there's no `PREVIOUS sibling` selector in CSS, we had to put the `<span>` after the `<input/>` to be able to select based on its `:focus`
+
+[for practice with complex css selectors, play this game](https://flukeout.github.io/)
+
+
+now we can put a transition on both of those styles and everything should be solid
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container span {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+  
+  font-weight: 300;
+  font-size: 16px;
+  
+  transition: font-size 0.25s, color 1s;
+}
+
+//...
+```
+
+that's pretty swanky
+
 
 ### email, validation
 ### animating on validation state
