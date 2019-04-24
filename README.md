@@ -38,7 +38,8 @@ Uncle Snoop wants to make sure we can get events from the user. First thing's fi
 
 <sub>./src/App.js</sub>
 ```js
-//...
+import React, { Component } from 'react';
+import './App.css';
 
 class App extends Component {
   render(){
@@ -49,13 +50,16 @@ class App extends Component {
     );
   }
 }
+
+export default App;
 ```
 
 and let's give it an instance method to call
 
 <sub>./src/App.js</sub>
 ```js
-//...
+import React, { Component } from 'react';
+import './App.css';
 
 class App extends Component {
 
@@ -69,6 +73,8 @@ class App extends Component {
     );
   }
 }
+
+export default App;
 ```
 
 notice that when we bind the instance method to the button with `onClick={this.done}` we need to say `this.done` but when we defined it it was just `done = ()=> ...`
@@ -77,7 +83,8 @@ what we'll be doing in this workshop is learning to get user values into `state`
 
 <sub>./src/App.js</sub>
 ```js
-//...
+import React, { Component } from 'react';
+import './App.css';
 
 class App extends Component {
 
@@ -96,6 +103,8 @@ class App extends Component {
     );
   }
 }
+
+export default App;
 ```
 
 ---
@@ -108,8 +117,66 @@ class App extends Component {
 <a name="step2"></a>
 ## step 2: give'm what they want - text input
 
-### rap name
-### floating label animation
+### editing the rap name
+
+we have a `rapName` listed in our `state`, now it's time to let the user update it
+
+first we'll render an `<input />` element with the value in it
+
+<sub>./src/App.js</sub>
+```js
+//...
+
+  render(){
+    return (
+      <div className='App'>
+        <input value={this.state.rapName}/>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+
+//...
+```
+
+so that's great if the value never changes, but Snoop wants the user's input to be set in the `.state` so it can be rendered back to the user!
+
+we learned already that everything that changes that the users see has to be from the state.
+
+So every time the user types even one character, we need to set that in the state - only then it can render to the user.
+
+
+To take text input from a user, we're going to put an `onChange` eventHandler function on our `<input />` which sets the new value in `state` using `setState`
+
+This pattern is standard in React and goes by the name: [controlled input pattern](https://reactjs.org/docs/forms.html)
+
+<sub>./src/App.js</sub>
+```js
+//...
+  
+  setRapName = event => this.setState({ rapName: event.target.value })
+
+  render(){
+    return (
+      <div className='App'>
+        <input value={this.state.rapName} onChange={this.setRapName}/>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+
+//...
+```
+
+### label and containers
+
+Snoop wants his form elements to be stylish as well as functional
+
+Let's make a card (like in [material design](https://material-ui.com/demos/cards/))
+
+
+### floating label
+### card container for form input
 
 ### email, validation
 ### animating on validation state

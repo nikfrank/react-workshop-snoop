@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component {
+  state = {
+    rapName: 'Nate Dogg z"l',
+    albumSales: 4200000,
+  }
+
+  done = ()=>{
+    console.log('done', this.state);
+  }
+
+  setRapName = event => this.setState({ rapName: event.target.value })
+
+  render(){
+    return (
+      <div className="App">
+        <div className="form">
+          <div className="card">
+            <label>
+              Rap Name
+              <input value={this.state.rapName} onChange={this.setRapName} />
+            </label>
+          </div>
+
+          <div className="card">
+            <input value={this.state.rapName} onChange={this.setRapName} />
+          </div>
+          <div className="card">
+            <input value={this.state.rapName} onChange={this.setRapName} />
+          </div>
+
+        </div>
+        <button onClick={this.done}> Done </button>
+      </div>
+    );
+  }
+};
 
 export default App;
