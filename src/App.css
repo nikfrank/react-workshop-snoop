@@ -72,7 +72,7 @@
 
 .swanky-input-container input:focus {
   outline: none;
-  font-size: 30px;
+  font-size: 26px;
   border-bottom: 2px solid green;
 }
 
@@ -91,4 +91,18 @@
 .swanky-input-container input:focus + span {
   color: green;
   font-size: 12px;
+}
+
+.swanky-input-container input:focus ~ span.invalid {
+  display: none;
+}
+
+.swanky-input-container input:not(:focus) ~ span.invalid {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  font-size: 12px;
+  color: red;
+  text-align: right;
 }

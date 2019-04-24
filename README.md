@@ -90,7 +90,7 @@ class App extends Component {
 
   state = {
     rapName: 'Nate Dogg z"l',
-    albumSales: 4200000
+    albumSales: 4200000,
   }
 
   done = ()=> console.log('done', this.state)
@@ -384,7 +384,7 @@ we'll use the [:focus pseudoselector](https://www.google.com/search?q=focus+pseu
 
 .swanky-input-container input:focus {
   outline: none;
-  font-size: 30px;
+  font-size: 26px;
   border-bottom: 2px solid green;
 }
 ```
@@ -498,7 +498,184 @@ that's pretty swanky
 
 
 ### email, validation
-### animating on validation state
+
+Snoop wants to be able to contact his applicants if they throw down lots of fresh work like that input we just made.
+
+So let's make another card right after the first for an email address
+
+<sub>./src/App.js</sub>
+```html
+//...
+  <div className="card swanky-input-container">
+    <input value={this.state.email} onChange={this.setEmail} />
+    <span>Email</span>
+  </div>
+//...
+```
+
+we'll also want to initialize `state.email` and make a setter method
+
+```js
+//...
+  
+  state = {
+    rapName: 'Nate Dogg z"l',
+    albumSales: 4200000,
+    email: '',
+  }
+  
+  //...
+  
+  setEmail = event => this.setState({ email: event.target.value })
+  
+  //...
+```
+
+bam! right away that's looking good.
+
+Hold up a minute tho - Uncle Snoop has seen some skeezy email addresses in his day - he's gonna want us to validate.
+
+
+#### controlled input validation
+
+The controlled input pattern gives us a very straightforward way to build a validation UX.
+
+Every time our value changes, we have out setter instance method being called... so to tell the user if their input is valid, we should compute a boolean `isEmailInvalid` in that same function, save it to the `state` and use it in `render` a validation failure message
+
+let's see what that looks like
+
+
+<sub>./src/App.js</sub>
+```js
+//...
+  state = {
+    rapName: 'Nate Dogg z"l',
+    albumSales: 4200000,
+    email: '',
+    isEmailInvalid: false,
+  }
+  
+  //...
+  
+  setEmail = event => this.setState({
+    email: event.target.value,
+    isEmailInvalid: !event.target.value.includes('@gmail.com'),
+  })
+  
+  //...
+```
+
+we've now just added one more value in `state`
+
+it starts out as `false` (if the user hasn't entered anything, the email van't be invalid yet)
+
+then as soon as the user types, we check whether each new value contains the string `@gmail.com` to determine if it is a valid email
+
+if you use hotmail still, it just won't work!
+
+
+
+#### rendering from validation state
+
+if the email is inValid, we want to render out an extra `<span>` with our validation message
+
+
+```html
+//...
+  <div className="card swanky-input-container">
+    <input value={this.state.email} onChange={this.setEmail} />
+    <span>Email</span>
+    {this.state.isEmailInvalid ? (
+      <span className="invalid">Please enter a valid email address</span>
+    ) : null}
+  </div>
+//...
+```
+
+so far so good, now we can style it to fit in the top right corner of our card
+
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container span.invalid {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  font-size: 12px;
+  color: red;
+  text-align: right;
+}
+
+```
+
+that's great and all, but maybe it shouldn't show up while we're typing!
+
+let's use the same trick as last time, but now with the [general sibling selector](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator) to `display: none;` the invalidation message while the `input` is `:focus`
+
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container input:focus ~ span.invalid {
+  display: none;
+}
+
+.swanky-input-container input:not(:focus) ~ span.invalid {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  font-size: 12px;
+  color: red;
+  text-align: right;
+}
+```
+
+Fresh!
+
+
+### email validation regex
+
+Our "gmail only" rule is a bit harsh! Snoop wants us to use the RFC 5322 Official Standard [email regex](https://emailregex.com/) validator to mellow out the vibe.
+
+To accomplish this goal, we'll need to learn how to [check a string with a regex in javascript](https://www.google.com/search?q=check+string+regex+js)
+
+now that we've done that, let's plop that regex down into a utility file, export it, import it to App.js and use it for our check
+
+
+`$ touch ./src/emailRegex.js`
+
+<sub>./src/emailRegex.js</sub>
+```js
+// eslint-disable-next-line
+export default /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+```
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.css';
+
+import emailRegex from './emailRegex';
+
+class App extends Component {
+  //...
+  
+  setEmail = event => this.setState({
+    email: event.target.value,
+    isEmailInvalid: !emailRegex.test( event.target.value ),
+  })
+  
+  //...
+
+```
+
+that's way smoother now.
+
 
 ### albums sales, number format
 ### gold and platinum albums
