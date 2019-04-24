@@ -446,7 +446,7 @@ and set the font how I think looks good.
 
 ### label transitions on input:focus
 
-now we'll see why we had to put the label text in a `<span>`
+now we'll see why we had to put the label text in a `<span>` after the `<input/>`
 
 we want to change the `font-size` and `color` of the label text when the `<input/>` is `:focus`ed
 
