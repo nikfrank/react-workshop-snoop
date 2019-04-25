@@ -23,6 +23,8 @@ class App extends Component {
     isEmailInvalid: !emailRegex.test( event.target.value ),
   })
 
+  setJob = event => this.setState({ job: event.target.value })
+  
   render(){
     return (
       <div className="App">
@@ -67,6 +69,17 @@ class App extends Component {
             </label>
           </div>
 
+          
+          <div className="card swanky-input-container">
+            <label>
+              <select onChange={this.setJob} value={this.state.job}>
+                <option value='rapper'>rapper</option>
+                <option value='sales'>sales</option>
+                <option value='distribution'>distribution</option>
+              </select>
+              <span>Job</span>
+            </label>
+          </div>
         </div>
         <button onClick={this.done}> Done </button>
       </div>

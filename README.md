@@ -401,6 +401,7 @@ last thing, we want to apply a [css transition](https://www.w3schools.com/css/cs
   position: absolute;
   border: none;
   border-bottom: 1px solid black;
+  background-color: white;
   
   bottom: 2px;
   left: 2px;
@@ -830,12 +831,73 @@ first let's initialize some values in `state`
 
 <sub>./src/App.js</sub>
 ```js
+//...
 
+  state = {
+    rapName: 'Nate Dogg z"l',
+    albumSales: 4200000,
+    email: '',
+    isEmailInvalid: false,
+    job: '',
+    country: '',
+    coast: '',
+    topAlbum: '',
+    topRapper: '',
+    topRhyme: '',
+    startDate: null,
+  }
 ```
 
 
 ### pick a job
-### country & state
+
+<sub>./src/App.js</sub>
+```js
+  setJob = event => this.setState({ job: event.target.value })
+```
+
+```html
+          <div className="card swanky-input-container">
+            <label>
+              <select onChange={this.setJob} value={this.state.job}>
+                <option value='rapper'>rapper</option>
+                <option value='sales'>sales</option>
+                <option value='distribution'>distribution</option>
+              </select>
+              <span>Job</span>
+            </label>
+          </div>
+
+```
+
+here we'll also want to add selectors for the select, and to fix the `font-size` for the `<option>` tags (to reduce jank)
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.swanky-input-container select,
+.swanky-input-container input {
+
+//...
+
+.swanky-input-container select:focus,
+.swanky-input-container input:focus{
+
+//...
+
+.swanky-input-container select:focus + span,
+.swanky-input-container input:focus + span {
+
+
+//...
+
+option {
+  font-size: 22px;
+}
+```
+
+### country & coast
 ### dropdown with an image (album selection)
 ### menu hover dropdown -> header
 ### autocomplete / filter dropdown

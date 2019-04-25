@@ -54,10 +54,12 @@
   position: relative;
 }
 
+.swanky-input-container select,
 .swanky-input-container input {
   position: absolute;
   border: none;
   border-bottom: 1px solid black;
+  background-color: white;
   
   bottom: 2px;
   left: 2px;
@@ -70,10 +72,15 @@
   transition: font-size 0.25s;
 }
 
-.swanky-input-container input:focus {
+.swanky-input-container select:focus,
+.swanky-input-container input:focus{
   outline: none;
   font-size: 26px;
   border-bottom: 2px solid green;
+}
+
+option {
+  font-size: 22px;
 }
 
 .swanky-input-container span {
@@ -88,6 +95,7 @@
   transition: font-size 0.25s, color 1s;
 }
 
+.swanky-input-container select:focus + span,
 .swanky-input-container input:focus + span {
   color: green;
   font-size: 12px;
