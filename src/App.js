@@ -10,6 +10,12 @@ class App extends Component {
     albumSales: 4200000,
     email: '',
     isEmailInvalid: false,
+    job: '',
+    country: '',
+    topAlbum: '',
+    topRapper: '',
+    startDate: null,
+
   }
 
   done = ()=>{
@@ -73,6 +79,7 @@ class App extends Component {
           <div className="card swanky-input-container">
             <label>
               <select onChange={this.setJob} value={this.state.job}>
+                <option value=''>Select Job</option>
                 <option value='rapper'>rapper</option>
                 <option value='sales'>sales</option>
                 <option value='distribution'>distribution</option>
