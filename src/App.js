@@ -35,13 +35,15 @@ class App extends Component {
           </div>
 
           <div className="card swanky-input-container">
-            <input value={this.state.email} onChange={this.setEmail} />
-            <span>Email</span>
-            {this.state.isEmailInvalid ? (
-               <span className="invalid">
-                 Please enter a valid email address
-               </span>
-             ) : null}
+            <label>
+              <input value={this.state.email} onChange={this.setEmail} />
+              <span>Email</span>
+              {this.state.isEmailInvalid ? (
+                 <span className="invalid">
+                   Please enter a valid email address
+                 </span>
+               ) : null}
+            </label>
           </div>
           
           <div className="card swanky-input-container">
@@ -55,8 +57,8 @@ class App extends Component {
                 {
                   [1,2,3,4]
                     .filter(n => n*1000000 <= this.state.albumSales)
-                    .map((a, ai) => (
-                      <div className='goldRecord' key={ai} >
+                    .map(n => (
+                      <div className='goldRecord' key={n} >
                         <img src={goldRecord} alt='solid gold'/>
                       </div>
                     ))

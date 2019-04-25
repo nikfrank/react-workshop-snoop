@@ -583,11 +583,13 @@ if the email is inValid, we want to render out an extra `<span>` with our valida
 ```html
 //...
   <div className="card swanky-input-container">
-    <input value={this.state.email} onChange={this.setEmail} />
-    <span>Email</span>
-    {this.state.isEmailInvalid ? (
-      <span className="invalid">Please enter a valid email address</span>
-    ) : null}
+    <label>
+      <input value={this.state.email} onChange={this.setEmail} />
+      <span>Email</span>
+      {this.state.isEmailInvalid ? (
+        <span className="invalid">Please enter a valid email address</span>
+      ) : null}
+    </label>
   </div>
 //...
 ```
@@ -736,8 +738,8 @@ import goldRecord from './goldRecord.png';
               <div className='goldRecords'>
                 {
                   [1,2,3,4]
-                    .map((a, ai) => (
-                      <div className='goldRecord' key={ai} >
+                    .map(n => (
+                      <div className='goldRecord' key={n} >
                         <img src={goldRecord} alt='solid gold'/>
                       </div>
                     ))
@@ -795,8 +797,8 @@ now let's use our skills with [Array.filter](https://developer.mozilla.org/en-US
                 {
                   [1,2,3,4]
                     .filter(n => n*1000000 <= this.state.albumSales)
-                    .map((a, ai) => (
-                      <div className='goldRecord' key={ai} >
+                    .map(n => (
+                      <div className='goldRecord' key={n} >
                         <img src={goldRecord} alt='solid gold'/>
                       </div>
                     ))
