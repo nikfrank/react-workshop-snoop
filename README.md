@@ -679,7 +679,140 @@ that's way smoother now.
 
 
 ### albums sales, number format
+
+Aight. Snoop's gonna need to know how many albums you've been selling
+
+like before, we'll need a setter instance method
+
+<sub>./src/App.js</sub>
+```js
+  setAlbumSales = event => this.setState({ albumSales: event.target.value })
+```
+
+and a JSX `<input />` tag with `value` and `onChange` bindings, along with our `<label>...<span>` solution from the last section
+
+```html
+          <div className="card swanky-input-container">
+            <label>
+              <input value={this.state.albumSales}
+                     type='number'
+                     step={1000}
+                     onChange={this.setAlbumSales} />
+              <span>Album Sales</span>
+            </label>
+          </div>
+
+```
+
+here, I've set `type='number'` and `step={1000}` to take advantage of the built in HTML number input behaviour.
+
+
 ### gold and platinum albums
+
+Snoop is very impressed with your number input, he just isn't connecting to it. He wants us to display gold records on top of the input for every million albums sold (up to four).
+
+[he's taken a picture of one of his gold records and made a transparent background for us](https://github.com/nikfrank/react-course-workbook-2/blob/step7/src/goldRecord.png?raw=true)
+
+
+first, let's render out all four albums, then we can filter that down
+
+<sub>./src/App.js</sub>
+```js
+//... make sure to download the file to the same directory!
+
+import goldRecord from './goldRecord.png';
+
+//...
+```
+
+```html
+          <div className="card swanky-input-container">
+            <label>
+              <input value={this.state.albumSales}
+                     type='number'
+                     step={1000}
+                     onChange={this.setAlbumSales} />
+              <span>Album Sales</span>
+              <div className='goldRecords'>
+                {
+                  [1,2,3,4]
+                    .map((a, ai) => (
+                      <div className='goldRecord' key={ai} >
+                        <img src={goldRecord} alt='solid gold'/>
+                      </div>
+                    ))
+                }
+              </div>
+            </label>
+          </div>
+
+```
+
+we'll use the outer `<div>` as a flex container (going right to left) starting from 50px from the right side of the swanky-input-container
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.goldRecords {
+  position: absolute;
+  right: 50px;
+  height: 100%;
+  
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+```
+
+and we'll use the extra `<div>` wrapping the `<img/>` to make the records overlap
+
+```css
+//...
+
+.goldRecord {
+  width: 20px;
+}
+
+.goldRecord img {
+  width: 50px;
+  height: 100%;
+}
+```
+
+now let's use our skills with [Array.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) to show the right number of records
+
+<sub>./src/App.js</sub>
+```html
+          <div className="card swanky-input-container">
+            <label>
+              <input value={this.state.albumSales}
+                     type='number'
+                     step={1000}
+                     onChange={this.setAlbumSales} />
+              <span>Album Sales</span>
+              <div className='goldRecords'>
+                {
+                  [1,2,3,4]
+                    .filter(n => n*1000000 <= this.state.albumSales)
+                    .map((a, ai) => (
+                      <div className='goldRecord' key={ai} >
+                        <img src={goldRecord} alt='solid gold'/>
+                      </div>
+                    ))
+                }
+              </div>
+            </label>
+          </div>
+```
+
+solid!
+
+We're using a common pattern in React here of computing multiple things from one `state` value.
+
+Here we could compute the number of albums in the `setAlbumsSales` method (and in some cases we'll want to do that, eg: for efficiency), here though it's easy enough to use `state.albumSales` to compute out a list of `<img/>`s
+
+if the computation is more complex (sorting, arithmetic, etc), we would consider not doing it inside the render function, as that would slow down our app.
 
 
 <a name="step3"></a>

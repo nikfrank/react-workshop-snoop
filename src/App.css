@@ -106,3 +106,22 @@
   color: red;
   text-align: right;
 }
+
+.goldRecords {
+  position: absolute;
+  right: 50px;
+  height: 100%;
+  
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.goldRecord {
+  width: 20px;
+}
+
+.goldRecord img {
+  width: 50px;
+  height: 100%;
+}

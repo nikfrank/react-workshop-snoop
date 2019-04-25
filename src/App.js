@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import emailRegex from './emailRegex';
+import goldRecord from './goldRecord.png';
 
 class App extends Component {
   state = {
@@ -15,6 +16,7 @@ class App extends Component {
     console.log('done', this.state);
   }
 
+  setAlbumSales = event => this.setState({ albumSales: event.target.value })
   setRapName = event => this.setState({ rapName: event.target.value })
   setEmail = event => this.setState({
     email: event.target.value,
@@ -42,8 +44,25 @@ class App extends Component {
              ) : null}
           </div>
           
-          <div className="card">
-            <input value={this.state.rapName} onChange={this.setRapName} />
+          <div className="card swanky-input-container">
+            <label>
+              <input value={this.state.albumSales}
+                     type='number'
+                     step={1000}
+                     onChange={this.setAlbumSales} />
+              <span>Album Sales</span>
+              <div className='goldRecords'>
+                {
+                  [1,2,3,4]
+                    .filter(n => n*1000000 <= this.state.albumSales)
+                    .map((a, ai) => (
+                      <div className='goldRecord' key={ai} >
+                        <img src={goldRecord} alt='solid gold'/>
+                      </div>
+                    ))
+                }
+              </div>
+            </label>
           </div>
 
         </div>
