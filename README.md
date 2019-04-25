@@ -820,10 +820,24 @@ if the computation is more complex (sorting, arithmetic, etc), we would consider
 <a name="step3"></a>
 ## break'm off somethin - drop downs
 
+Snoop is going to want to know more than a name and a number!
+
+<img src='http://hiphopgoldenage.com/wp-content/uploads/2015/07/42-27797293.jpg' height=250 width=325/>
+
+He also has a list of open positions to apply to, and is going to want to know where you're from (country / state)
+
+first let's initialize some values in `state`
+
+<sub>./src/App.js</sub>
+```js
+
+```
+
+
 ### pick a job
 ### country & state
 ### dropdown with an image (album selection)
-### menu hover dropdown
+### menu hover dropdown -> header
 ### autocomplete / filter dropdown
 ### picking a date
 
@@ -831,7 +845,7 @@ if the computation is more complex (sorting, arithmetic, etc), we would consider
 <a name="step4"></a>
 ## and it's gotta be bumpin - refactor to components
 
-### snoop SVG, album SVG
+### snoop SVG, albums
 ### floating label input
 ### image dropdown
 ### autocomplete dropdown
