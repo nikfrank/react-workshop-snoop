@@ -1145,6 +1145,36 @@ and the styles we need to capture the clicks when they aren't on the dropdown li
 ```
 
 
+#### bonus: styling the scrollbar
+
+Snoop is probably going to think that scrollbar looks a bit 1992, and not in the good way.
+
+Let's be proactive and funk it up
+
+[styling scrollbars is fairly new in CSS, so I find CSS tricks to be a great resource for this kind of thing](https://css-tricks.com/almanac/properties/s/scrollbar/)
+
+```css
+.album-dropdown-base {
+  padding-top: 30px;
+  padding-right: 15px;
+}
+
+ul.selectable-albums::-webkit-scrollbar {
+  width: 5px;
+}
+
+ul.selectable-albums::-webkit-scrollbar-track {
+  background-color: #0000;
+}
+
+ul.selectable-albums::-webkit-scrollbar-thumb {
+  background-color: #7d79;
+  border-radius: 2.5px;
+}
+
+
+```
+
 
 ### menu hover dropdown -> header
 ### autocomplete / filter dropdown (country)

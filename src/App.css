@@ -159,17 +159,23 @@ ul.selectable-albums li:hover {
 ul.selectable-albums img {
   height: 45px;
   margin-top: -5px;
-  width: auto;
+  width: 45px;
 }
 
 .album-dropdown-base span:not(.drop-arrow),
 ul.selectable-albums li span {
   display: inline-block;
-  width: 150px;
+  width: 180px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
+
+.album-dropdown-base span:not(.drop-arrow):nth-child(2),
+ul.selectable-albums li span:nth-child(2) {
+  width: 50px;
+}
+
 
 .album-dropdown-base .drop-arrow {
   position: absolute;
@@ -194,8 +200,22 @@ ul.selectable-albums {
     0px 1px 3px 0px rgba(0,0,0,0.2),
     0px 1px 1px 0px rgba(0,0,0,0.14),
     0px 2px 1px -1px rgba(0,0,0,0.12);
+  
 }
 
+
+ul.selectable-albums::-webkit-scrollbar {
+  width: 5px;
+}
+
+ul.selectable-albums::-webkit-scrollbar-track {
+  background-color: #0000;
+}
+
+ul.selectable-albums::-webkit-scrollbar-thumb {
+  background-color: #7d79;
+  border-radius: 2.5px;
+}
 
 
 .click-out {
