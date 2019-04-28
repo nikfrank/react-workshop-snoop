@@ -689,7 +689,7 @@ that's way smoother now.
 
 ### albums sales, number format
 
-Aight. Snoop's gonna need to know how many albums you've been selling
+Aight. Snoop's gonna need to know how many albums you've been slangin
 
 like before, we'll need a setter instance method
 
@@ -1100,6 +1100,72 @@ now let's style it to work
 
 <sub>./src/App.css</sub>
 ```css
+.album-dropdown-base,
+ul.selectable-albums li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px;
+}
+
+
+.album-dropdown-base {
+  padding-top: 30px;
+  padding-right: 15px;
+}
+
+ul.selectable-albums li:hover {
+  background-color: #eee;
+}
+
+.album-dropdown-base img,
+ul.selectable-albums img {
+  height: 45px;
+  margin-top: -5px;
+  width: 45px;
+}
+
+.album-dropdown-base span:not(.drop-arrow),
+ul.selectable-albums li span {
+  display: inline-block;
+  width: 180px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.album-dropdown-base span:not(.drop-arrow):nth-child(2),
+ul.selectable-albums li span:nth-child(2) {
+  width: 50px;
+}
+
+
+.album-dropdown-base .drop-arrow {
+  position: absolute;
+  right: 5px;
+  user-select: none;
+}
+
+ul.selectable-albums {
+  list-style: none;
+  padding: 0;
+
+  position: absolute;
+  top: 100%;
+
+  max-height: 25vh;
+  overflow-y: auto;
+  
+  margin: 2px 0 0 0;
+
+  background-color: white;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+  
+}
 ```
 
 
@@ -1122,6 +1188,8 @@ now let's style it to work
        </>
     )}
 ```
+
+here we're using the newest syntax for `React.Fragment`, which is a fake element which just wraps a bunch of tags so that there's technically one root element returned from an expression (here we need it because of the conditional ternary operator)
 
 and the instance method
 
