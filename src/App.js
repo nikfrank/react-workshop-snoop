@@ -4,6 +4,8 @@ import './App.css';
 import emailRegex from './emailRegex';
 import goldRecord from './goldRecord.png';
 
+import snoopAlbums from './snoopAlbums';
+
 class App extends Component {
   state = {
     rapName: 'Nate Dogg z"l',
@@ -12,16 +14,18 @@ class App extends Component {
     isEmailInvalid: false,
     job: '',
     country: '',
-    topAlbum: '',
+    topAlbum: null,
+    topAlbumOpen: false,
     topRapper: '',
     startDate: null,
-
   }
 
   done = ()=>{
     console.log('done', this.state);
   }
 
+  toggleTopAlbumOpen = ()=> this.setState(state => ({ topAlbumOpen: !state.topAlbumOpen }))
+  
   setAlbumSales = event => this.setState({ albumSales: event.target.value })
   setRapName = event => this.setState({ rapName: event.target.value })
   setEmail = event => this.setState({
@@ -30,6 +34,8 @@ class App extends Component {
   })
 
   setJob = event => this.setState({ job: event.target.value })
+
+  selectAlbum = topAlbum=> this.setState({ topAlbum, topAlbumOpen: false })
   
   render(){
     return (
@@ -38,19 +44,19 @@ class App extends Component {
           <div className="card swanky-input-container">
             <label>
               <input value={this.state.rapName} onChange={this.setRapName} />
-              <span>Rap Name</span>
+              <span className='title'>Rap Name</span>
             </label>
           </div>
 
           <div className="card swanky-input-container">
             <label>
               <input value={this.state.email} onChange={this.setEmail} />
-              <span>Email</span>
+              <span className='title'>Email</span>
               {this.state.isEmailInvalid ? (
                  <span className="invalid">
                    Please enter a valid email address
                  </span>
-               ) : null}
+              ) : null}
             </label>
           </div>
           
@@ -60,7 +66,7 @@ class App extends Component {
                      type='number'
                      step={1000}
                      onChange={this.setAlbumSales} />
-              <span>Album Sales</span>
+              <span className='title'>Album Sales</span>
               <div className='goldRecords'>
                 {
                   [1,2,3,4]
@@ -84,9 +90,41 @@ class App extends Component {
                 <option value='sales'>sales</option>
                 <option value='distribution'>distribution</option>
               </select>
-              <span>Job</span>
+              <span className='title'>Job</span>
             </label>
           </div>
+
+          <div className="card swanky-input-container">
+            <span className='title'>Top Album</span>
+            <div className="album-dropdown-base" onClick={this.toggleTopAlbumOpen}>
+              {this.state.topAlbum === null ? (
+                 <span>Select Top Album</span>
+              ):(
+                 <>
+                   <img src={this.state.topAlbum.cover} alt={this.state.topAlbum.name}/>
+                   <span>{this.state.topAlbum.year}</span>
+                   <span>{this.state.topAlbum.name}</span>
+                 </>
+              )}
+              <span className='drop-arrow'>{this.state.topAlbumOpen ? '▲' : '▼'}</span>
+            </div>
+            {!this.state.topAlbumOpen ? null : (
+               <>
+                 <div className='click-out'/>
+                 <ul className='selectable-albums'>
+                   {snoopAlbums.map(({ name, year, cover })=> (
+                     <li key={name} onClick={()=> this.selectAlbum({ name, year, cover })}>
+                       <img src={cover} alt={name}/>
+                       <span>{year}</span>
+                       <span>{name}</span>                       
+                     </li>
+                   ))}
+                 </ul>
+               </>
+            )}
+          </div>
+
+          
         </div>
         <button onClick={this.done}> Done </button>
       </div>

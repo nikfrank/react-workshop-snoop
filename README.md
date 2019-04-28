@@ -54,7 +54,9 @@ class App extends Component {
 export default App;
 ```
 
-and let's give it an instance method to call
+and let's give it an instance method to call, using a fat arrow to log out a message `'done'` (just to test that our button works)
+
+<img src='' width=1 height=200/>
 
 <sub>./src/App.js</sub>
 ```js
@@ -76,6 +78,8 @@ class App extends Component {
 
 export default App;
 ```
+
+`done = ()=> console.log('done')` is defining `this.done` to be a function (we're using the [fat arrow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) in one line who simply calls `console.log` with a string`'done'`
 
 notice that when we bind the instance method to the button with `onClick={this.done}` we need to say `this.done` but when we defined it it was just `done = ()=> ...`
 
@@ -273,7 +277,7 @@ to accomplish this, we'll need to have a [position: relative](https://www.google
         <div className="card swanky-input-container">
           <label>
             <input value={this.state.rapName} onChange={this.setRapName}/>
-            <span>Rap Name</span>
+            <span className='title'>Rap Name</span>
           </label>
         </div>
         <button onClick={this.done}> Done </button>
@@ -429,7 +433,7 @@ now we can position the label properly (in the top left of the container)
 ```css
 //...
 
-.swanky-input-container span {
+.swanky-input-container span.title {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -455,7 +459,7 @@ the way we'll do that is by making a selector:
 
 ```
 select the .swanky-input-container class's child
-which is a span
+which is a span with className title
 which comes AFTER a :focused input
 ```
 
@@ -463,7 +467,7 @@ which looks like
 
 <sub>./src/App.css</sub>
 ```css
-.swanky-input-container input:focus + span {
+.swanky-input-container input:focus + span.title {
   color: green;
   font-size: 12px;
 }
@@ -480,7 +484,7 @@ now we can put a transition on both of those styles and everything should be sol
 ```css
 //...
 
-.swanky-input-container span {
+.swanky-input-container span.title {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -509,7 +513,7 @@ So let's make another card right after the first for an email address
 //...
   <div className="card swanky-input-container">
     <input value={this.state.email} onChange={this.setEmail} />
-    <span>Email</span>
+    <span className='title'>Email</span>
   </div>
 //...
 ```
@@ -586,7 +590,7 @@ if the email is inValid, we want to render out an extra `<span>` with our valida
   <div className="card swanky-input-container">
     <label>
       <input value={this.state.email} onChange={this.setEmail} />
-      <span>Email</span>
+      <span className='title'>Email</span>
       {this.state.isEmailInvalid ? (
         <span className="invalid">Please enter a valid email address</span>
       ) : null}
@@ -701,7 +705,7 @@ and a JSX `<input />` tag with `value` and `onChange` bindings, along with our `
                      type='number'
                      step={1000}
                      onChange={this.setAlbumSales} />
-              <span>Album Sales</span>
+              <span className='title'>Album Sales</span>
             </label>
           </div>
 
@@ -735,7 +739,7 @@ import goldRecord from './goldRecord.png';
                      type='number'
                      step={1000}
                      onChange={this.setAlbumSales} />
-              <span>Album Sales</span>
+              <span className='title'>Album Sales</span>
               <div className='goldRecords'>
                 {
                   [1,2,3,4]
@@ -793,7 +797,7 @@ now let's use our skills with [Array.filter](https://developer.mozilla.org/en-US
                      type='number'
                      step={1000}
                      onChange={this.setAlbumSales} />
-              <span>Album Sales</span>
+              <span className='title'>Album Sales</span>
               <div className='goldRecords'>
                 {
                   [1,2,3,4]
@@ -840,7 +844,7 @@ first let's initialize some values in `state`
     isEmailInvalid: false,
     job: '',
     country: '',
-    topAlbum: '',
+    topAlbum: null,
     topRapper: '',
     startDate: null,
   }
@@ -863,7 +867,7 @@ first let's initialize some values in `state`
                 <option value='sales'>sales</option>
                 <option value='distribution'>distribution</option>
               </select>
-              <span>Job</span>
+              <span className='title'>Job</span>
             </label>
           </div>
 
@@ -885,8 +889,8 @@ here we'll also want to add selectors for the select, and to fix the `font-size`
 
 //...
 
-.swanky-input-container select:focus + span,
-.swanky-input-container input:focus + span {
+.swanky-input-container select:focus + span.title,
+.swanky-input-container input:focus + span.title {
 
 
 //...
@@ -897,6 +901,146 @@ option {
 ```
 
 ### dropdown with an image (album selection)
+
+Snoop is all about the music. So when someone applies for a job with him, he's going to want to know that person's favourite rap album
+
+We could make "just another dropdown", but we'd rather really impress Snoop by making a dropdown that also shows the album cover `<img/>`!
+
+unfortunately, when we try to render an `<img/>` into an `<option/>` we get an error <code style="color:red">Only strings and numbers are supported as &lt;option&gt; children.</code>
+
+So we're going to have to build the entire dropdown from scratch using `<div/>`s
+
+#### downloading assets
+
+first, let's decide on a list to choose from
+
+|name|year|cover|
+|---|---|---|
+|Doggystyle|1993|<img src="https://upload.wikimedia.org/wikipedia/en/6/63/SnoopDoggyDoggDoggystyle.jpg" height=200 width=200/>|
+|Tha Doggfather|1996|<img src="https://upload.wikimedia.org/wikipedia/en/a/a3/Tha-doggfather.jpg" height=200 width=200/>|
+|Da Game Is to Be Sold, Not to Be Told|1998|<img src="https://upload.wikimedia.org/wikipedia/en/c/c5/Gameistobesold.jpg" height=200 width=200/>|
+|No Limit Top Dogg|1999|<img src="https://upload.wikimedia.org/wikipedia/en/d/d1/Snoop_front.JPG" height=200 width=200/>|
+|Tha Last Meal|2000|<img src="https://upload.wikimedia.org/wikipedia/en/d/dc/The_Last_Meal_-_Front.jpeg" height=200 width=200/>|
+
+Obviously everything Snoop puts out is fresh, so we can always add more later.
+
+You can go ahead and grab the album cover image source urls from here
+
+
+#### importing assets
+
+let's make an index file for all the albums to keep things organized
+
+`$ touch ./src/snoopAlbums.js`
+
+<sub>./src/snoopAlbums.js</sub>
+```js
+import doggystyle from './doggystle.jpg';
+
+export default [
+  { name: 'Doggystyle', year: 1993, cover: 'https://upload.wikimedia.org/wikipedia/en/6/63/SnoopDoggyDoggDoggystyle.jpg' },
+];
+```
+
+we `export` an array of albums, each of which is an object
+
+each album's object will need a field for `name` string `year` number and `cover` image
+
+(I'll leave it as an exercise to follow this pattern and complete the list of albums)
+
+
+#### rendering the selection
+
+
+let's render out the two possible closed states (no selection made, selection already made)
+
+<sub>./src/App.js</sub>
+```html
+//...
+
+          <div className="card swanky-input-container">
+            <span className='title'>Top Album</span>
+            <div className="album-dropdown">
+              {this.state.topAlbum === null ? (
+                 <span>Select Top Album</span>
+              ):(
+                 <>
+                   <img src={this.state.topAlbum.cover} alt={this.state.topAlbum.name}/>
+                   <span>{this.state.topAlbum.year}</span>
+                   <span>{this.state.topAlbum.name}</span>
+                 </>
+              )}
+              <span className='drop-arrow'>▼</span>
+            </div>
+          </div>
+//...
+```
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+
+.album-dropdown {
+  margin: 30px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.album-dropdown img {
+  height: 100px;
+  width: 100px;
+}
+
+.album-dropdown .drop-arrow {
+  user-select: none;
+  cursor: pointer;
+}
+```
+
+now if we set `topAlbum: 0` in our `state = {...}` initialization, we'll see doggystyle render out
+
+
+#### toggling the dropdown open state
+
+now that the closed states render correctly, we need to give our dropdown the ability to open
+
+<sub>./src/App.js</sub>
+```js
+  state = {
+    //...
+    topAlbumOpen: false,
+  }
+
+  toggleTopAlbumOpen = ()=> this.setState(state => ({ topAlbumOpen: !state.topAlbumOpen }))
+
+  //...
+```
+
+
+now that we can toggle the state, we have three things to render
+
+1. the selectable items
+2. switch the drop arrow to point up
+3. an invisible "click out" div behind the selectable items, so when the user clicks out, we can close the dropdown
+
+
+#### the selectable items
+
+
+
+
+#### switch the drop arrow to point up
+
+```html
+  <span className='drop-arrow'>{this.state.topAlbumOpen ? '▲' : '▼'}</span>
+```
+
+
+#### the click out
+
+
 ### menu hover dropdown -> header
 ### autocomplete / filter dropdown (country)
 ### picking a date

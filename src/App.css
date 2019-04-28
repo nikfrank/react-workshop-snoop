@@ -45,9 +45,9 @@
   margin: 10px;
   
   box-shadow:
-  0px 1px 3px 0px rgba(0,0,0,0.2),
-  0px 1px 1px 0px rgba(0,0,0,0.14),
-  0px 2px 1px -1px rgba(0,0,0,0.12);
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
 }
 
 .swanky-input-container {
@@ -83,7 +83,7 @@ option {
   font-size: 22px;
 }
 
-.swanky-input-container span {
+.swanky-input-container span.title {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -95,8 +95,8 @@ option {
   transition: font-size 0.25s, color 1s;
 }
 
-.swanky-input-container select:focus + span,
-.swanky-input-container input:focus + span {
+.swanky-input-container select:focus + span.title,
+.swanky-input-container input:focus + span.title {
   color: green;
   font-size: 12px;
 }
@@ -133,3 +133,65 @@ option {
   width: 50px;
   height: 100%;
 }
+
+
+
+.album-dropdown-base,
+ul.selectable-albums li {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+
+.album-dropdown-base {
+  padding-top: 30px;
+  padding-right: 15px;
+}
+
+ul.selectable-albums li:hover {
+  background-color: #eeee;
+}
+
+.album-dropdown-base span:not(.drop-arrow),
+ul.selectable-albums li span {
+  display: inline-block;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.album-dropdown-base img,
+ul.selectable-albums img {
+  height: 40px;
+  width: auto;
+}
+
+.album-dropdown-base .drop-arrow {
+  position: absolute;
+  right: 5px;
+  user-select: none;
+}
+
+ul.selectable-albums {
+  list-style: none;
+  padding: 0;
+  margin: 2px 0 0 0;
+
+  background-color: white;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+
+  
+  position: absolute;
+  top: 100%;
+
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
