@@ -36,6 +36,7 @@ class App extends Component {
   setJob = event => this.setState({ job: event.target.value })
 
   selectAlbum = topAlbum=> this.setState({ topAlbum, topAlbumOpen: false })
+  clickOut = ()=> this.setState({ topAlbumOpen: false })
   
   render(){
     return (
@@ -110,7 +111,7 @@ class App extends Component {
             </div>
             {!this.state.topAlbumOpen ? null : (
                <>
-                 <div className='click-out'/>
+                 <div className='click-out' onClick={this.clickOut}/>
                  <ul className='selectable-albums'>
                    {snoopAlbums.map(({ name, year, cover })=> (
                      <li key={name} onClick={()=> this.selectAlbum({ name, year, cover })}>

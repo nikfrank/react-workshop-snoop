@@ -85,6 +85,8 @@ notice that when we bind the instance method to the button with `onClick={this.d
 
 what we'll be doing in this workshop is learning to get user values into `state`, so let's init a state and log it out in `this.done`
 
+remember that `state = {}` goes at the top of our `class` (that way we always know where to find it)
+
 <sub>./src/App.js</sub>
 ```js
 import React, { Component } from 'react';
@@ -409,7 +411,7 @@ last thing, we want to apply a [css transition](https://www.w3schools.com/css/cs
   
   bottom: 2px;
   left: 2px;
-  width: 100%;
+  width: calc(100% - 14px);
   height: 60px;
 
   font-size: 22px;
@@ -906,7 +908,7 @@ Snoop is all about the music. So when someone applies for a job with him, he's g
 
 We could make "just another dropdown", but we'd rather really impress Snoop by making a dropdown that also shows the album cover `<img/>`!
 
-unfortunately, when we try to render an `<img/>` into an `<option/>` we get an error <code style="color:red">Only strings and numbers are supported as &lt;option&gt; children.</code>
+unfortunately, when we try to render an `<img/>` into an `<option/>` we get an error `Only strings and numbers are supported as <option> children.`
 
 So we're going to have to build the entire dropdown from scratch using `<div/>`s
 
@@ -960,7 +962,7 @@ let's render out the two possible closed states (no selection made, selection al
 
           <div className="card swanky-input-container">
             <span className='title'>Top Album</span>
-            <div className="album-dropdown">
+            <div className="album-dropdown-base">
               {this.state.topAlbum === null ? (
                  <span>Select Top Album</span>
               ):(
@@ -981,25 +983,29 @@ let's render out the two possible closed states (no selection made, selection al
 //...
 
 
-.album-dropdown {
-  margin: 30px 10px 10px;
+.album-dropdown-base {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.album-dropdown img {
-  height: 100px;
-  width: 100px;
-}
-
-.album-dropdown .drop-arrow {
-  user-select: none;
   cursor: pointer;
+
+  padding: 30px 15px 10px 10px;
+}
+
+.album-dropdown-base img {
+  height: 45px;
+  margin-top: -5px;
+  width: auto;
+}
+
+.album-dropdown-base .drop-arrow {
+  position: absolute;
+  right: 5px;
+  user-select: none;
 }
 ```
 
-now if we set `topAlbum: 0` in our `state = {...}` initialization, we'll see doggystyle render out
+now if we set `topAlbum: snoopAlbums[0]` in our `state = {...}` initialization, we'll see doggystyle render out
 
 
 #### toggling the dropdown open state
@@ -1021,12 +1027,9 @@ now that the closed states render correctly, we need to give our dropdown the ab
 
 now that we can toggle the state, we have three things to render
 
-1. the selectable items
-2. switch the drop arrow to point up
+1. switch the drop arrow to point up
+2. the selectable items
 3. an invisible "click out" div behind the selectable items, so when the user clicks out, we can close the dropdown
-
-
-#### the selectable items
 
 
 
@@ -1037,8 +1040,110 @@ now that we can toggle the state, we have three things to render
   <span className='drop-arrow'>{this.state.topAlbumOpen ? '▲' : '▼'}</span>
 ```
 
+that was easy!
+
+
+
+#### the selectable items
+
+we're going to render a `<ul>` when the `topAlbumOpen` is `true`
+
+<sub>./src/App.js</sub>
+```js
+          <div className="card swanky-input-container">
+            <span className='title'>Top Album</span>
+            <div className="album-dropdown-base" onClick={this.toggleTopAlbumOpen}>
+              {this.state.topAlbum === null ? (
+                 <span>Select Top Album</span>
+              ):(
+                 <>
+                   <img src={this.state.topAlbum.cover} alt={this.state.topAlbum.name}/>
+                   <span>{this.state.topAlbum.year}</span>
+                   <span>{this.state.topAlbum.name}</span>
+                 </>
+              )}
+              <span className='drop-arrow'>{this.state.topAlbumOpen ? '▲' : '▼'}</span>
+            </div>
+            {!this.state.topAlbumOpen ? null : (
+               <ul className='selectable-albums'>
+               </ul>
+            )}
+          </div>
+```
+
+and in it, we'll render a list of the albums
+
+```js
+       <ul className='selectable-albums'>
+         {snoopAlbums.map(({ name, year, cover })=> (
+           <li key={name} onClick={()=> this.selectAlbum({ name, year, cover })}>
+             <img src={cover} alt={name}/>
+             <span>{year}</span>
+             <span>{name}</span>
+           </li>
+         ))}
+       </ul>
+```
+
+and of course, an instance method to select the album
+
+```js
+
+  selectAlbum = topAlbum => this.setState({ topAlbum, topAlbumOpen: false })
+  
+```
+
+which also closes the dropdown!
+
+
+now let's style it to work
+
+<sub>./src/App.css</sub>
+```css
+```
+
 
 #### the click out
+
+<sub>./src/App.js</sub>
+```js
+    {!this.state.topAlbumOpen ? null : (
+       <>
+         <div className='click-out' onClick={this.clickOut}/>
+         <ul className='selectable-albums'>
+           {snoopAlbums.map(({ name, year, cover })=> (
+             <li key={name} onClick={()=> this.selectAlbum({ name, year, cover })}>
+               <img src={cover} alt={name}/>
+               <span>{year}</span>
+               <span>{name}</span>
+             </li>
+           ))}
+         </ul>
+       </>
+    )}
+```
+
+and the instance method
+
+```js
+  clickOut = ()=> this.setState({ topAlbumOpen: false })
+```
+
+and the styles we need to capture the clicks when they aren't on the dropdown list items
+
+<sub>./src/App.cs</sub>
+```css
+//...
+
+.click-out {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+```
+
 
 
 ### menu hover dropdown -> header
