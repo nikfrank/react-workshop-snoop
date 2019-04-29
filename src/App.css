@@ -75,6 +75,7 @@ ul.hover-dropdown:hover {
 .done-button {
   background-color: white;
   padding: 15px;
+  margin-top: 10px;
   font-size: 24px;
   border-radius: 5px;
   user-select: none;

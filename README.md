@@ -124,6 +124,7 @@ now we can throw some CSS sauce on there and it'll be good to go
 .done-button {
   background-color: white;
   padding: 15px;
+  margin-top: 10px;
   font-size: 24px;
   border-radius: 5px;
   user-select: none;
