@@ -1551,7 +1551,7 @@ that `:not(:first-child):not(:last-child)` is pretty ugly...
 
 on mobile devices, `:hover` is mocked by the browser when the user presses the `<ul/>`! It wasn't always that way in the old school.
 
-however, the top list item is sometimes rendering on top of our rapper image, so let's put a `z-index: 25` on the `<img/>` so when the menu is tucked away it goes underneath Snoop (or pac or whoever)
+however, the top list item is sometimes rendering on top of our rapper image, so let's put a `z-index: 25` on the `<img/>` so when the menu is tucked away it goes underneath Snoop (or pac or whomever)
 
 <sub>./src/App.css</sub>
 ```css
