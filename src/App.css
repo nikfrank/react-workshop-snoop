@@ -1,38 +1,66 @@
-.App {
+.header {
+  position: fixed;
+  height: 100px;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid black;
+  background-color: #3338;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+
+.header img {
+  width: auto;
+  height: 100%;
+
+  z-index: 25;
+}
+
+ul.hover-dropdown {
+  list-style: none;
+  padding: 0;
+  
+  position: absolute;
+  right: 10px;
+  top: 20px;
+
+  height: 30px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+ul.hover-dropdown li {
+  height: 30px;
+  font-size: 24px;
+  padding: 3px 10px;
+  
+  background-color: #000c;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+ul.hover-dropdown li:first-child {
+  cursor: default;
+  background-color: #0003;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+ul.hover-dropdown li:not(:first-child):not(:last-child) {
+  border-bottom: 1px dashed #8888;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ul.hover-dropdown:hover {
+  height: initial;
+  z-index: 30;
 }
 
 .form {
+  padding-top: 120px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

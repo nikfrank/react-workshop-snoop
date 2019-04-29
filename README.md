@@ -822,8 +822,14 @@ Here we could compute the number of albums in the `setAlbumsSales` method (and i
 if the computation is more complex (sorting, arithmetic, etc), we would consider not doing it inside the render function, as that would slow down our app.
 
 
+---
+
+[back to the top](#thatop)
+
+---
+
 <a name="step3"></a>
-## break'm off somethin - drop downs
+## step 3: break'm off somethin - drop downs
 
 Snoop is going to want to know more than a name and a number!
 
@@ -1282,14 +1288,301 @@ ul.selectable-albums::-webkit-scrollbar-thumb {
 
 
 ### menu hover dropdown -> header
+
+Our app has no bite... just a bunch of form elements. Snoop wants to put a header at the top of the page that lets us set our favourite g-funk rapper to appear
+
+So what we'll make is a navbar with `position: fixed`, an `<img/>` in the middle (whose `src` prop we render from `state`) and a hover-dropdown menu to select the rapper
+
+
+#### importing assets
+
+we can use the index-file pattern again to keep our data separate from our view
+
+`$ touch ./src/rappers.js`
+
+<sub>./src/rappers.js</sub>
+```js
+export default [
+  { name: 'Snoop Dogg', imgSrc: 'http://i.imgur.com/8wjnDvw.png' },
+  { name: 'Tupac Shakur', imgSrc: 'https://stickeroid.com/uploads/pic/full-pngimg/thumb/stickeroid_5bf57ed20be69.png' },
+  { name: 'Dr Dre', imgSrc: 'https://i.imgur.com/QYo0aPI.png' },
+  { name: 'Eminem', imgSrc: 'http://4.bp.blogspot.com/_wevkEt-i9rw/R0YBWvL9WuI/AAAAAAAAABs/G6TjBC3BuXY/s320/eminem-5.png' },
+];
+```
+
+
+#### fixy navbar
+
+we've seen so far `position: relative` and `position: absolute` for declaring reference frame elements (relative) and positioning children elements based on them (absolute)
+
+now we get to use the other common value ... `position: fixed` ... which is the same as `absolute` except that it always uses the window as the reference frame.
+
+<sub>./src/App.js</sub>
+```html
+  <div className='App'>
+    <div className='header'></div>
+    //...
+```
+
+<sub>./src/App.css</sub>
+```css
+.header {
+  position: fixed;
+  height: 100px;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid black;
+  background-color: #3338;
+  color: white;
+}
+
+.form {
+  padding-top: 120px;
+  //...
+  
+```
+
+we've also added some padding to the form so it doesn't get hidden under the `.header`
+
+the reason it'd get hidden under there is that `position: fixed` (like `position: absolute`) takes elements OUT OF THE DOCUMENT FLOW
+
+what does that mean?
+
+the DOCUMENT FLOW is the order (top left to bottom right) that elements render in normal HTML. `display: block` or `display: flex` elements go top to bottom, `display: inline` or `display: inline-block` or `display: inline-flex` go from left to right. Normally when you render something like:
+
+```html
+<div>blah</div>
+<p>hmm</p>
+```
+
+`div` and `p` are both `display: block` by default, so `blah` renders above `hmm`
+
+if we'd styled the `div` to be `position: fixed` at the top of the window, they would render on top of eachother because the `div` no longer pushes the `p` down the page (because it can only do that if it's IN FLOW)
+
+generally, we want to keep elements IN FLOW - we make exceptions in two cases:
+
+1. things that really actually need to stay in a fixed position on the screen (such as navbars or static footers)
+2. lowly elements positioned absolutely inside a meaningful container (as we saw with the `swanky-input-container`, which itself is still IN FLOW)
+
+
+#### rendering the image
+
+we're going to need to import the `rappers` array (along with whatever we were `import`ing before
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.css';
+
+import emailRegex from './emailRegex';
+import goldRecord from './goldRecord.png';
+
+import snoopAlbums from './snoopAlbums';
+import rappers from './rappers';
+
+class App extends Component {
+  //...
+```
+
+now we can set an init value in our init `state`
+
+```js
+//...
+
+class App extends Component {
+  state = {
+    rapName: 'Nate Dogg z"l',
+    albumSales: 4200000,
+    email: '',
+    isEmailInvalid: false,
+    job: '',
+    country: '',
+    topAlbum: null,
+    topAlbumOpen: false,
+    topRapper: rappers[0],
+    startDate: null,
+  }
+
+  //...
+```
+
+and render an image from the `state.topRapper.imgSrc`
+
+```html
+  <div className='header'>
+    <img src={this.state.topRapper.imgSrc} alt={this.state.topRapper.name} />
+  </div>
+```
+
+and style it to not look all stretched out
+
+<sub>./src/App.css</sub>
+```css
+.header {
+  //...
+
+  display: flex;
+  justify-content: center;
+}
+
+.header img {
+  width: auto;
+  height: 100%;
+}
+
+//...
+```
+
+#### hover dropdown selection
+
+this is a great solution where we get to use pure CSS + HTML to accomplish a behavioural feature
+
+we're going to make a `<ul/>` in our `.header` which is normally tucked away, but opens up when we `:hover` it
+
+then it will only go away once we move our mouse off the (newly enlargened) `<ul/>`
+
+(credit for teaching me this to Julien)
+
+```html
+        <div className='header'>
+          <img src={this.state.topRapper.imgSrc} alt={this.state.topRapper.name}/>
+          <ul className='hover-dropdown'>
+            <li key='top item'>{this.state.topRapper.name}</li>
+            {rappers.map(rapper=>(
+              <li key={rapper.name} onClick={()=> this.setTopRapper(rapper)}>{rapper.name}</li>
+            ))}
+          </ul>
+        </div>
+
+```
+
+and the setter instance method [that we've already written the binding for!]
+
+```js
+  setTopRapper = topRapper => this.setState({ topRapper })
+```
+
+
+so far we have the currently selected rapper at the top slot, and then all the options in a list
+
+now the funky CSS
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+ul.hover-dropdown {
+  list-style: none;
+  padding: 0;
+  
+  position: absolute;
+  right: 10px;
+  top: 20px;
+
+  height: 30px;
+  overflow: hidden;
+}
+
+ul.hover-dropdown li {
+  height: 30px;
+  font-size: 24px;
+  padding: 3px 10px;
+  
+  background-color: #000c;
+}
+
+ul.hover-dropdown:hover {
+  height: initial;
+  z-index: 30;
+}
+
+//...
+```
+
+`height: initial` is telling CSS to ignore the `height: 30px;` we had set otherwise (`initial` is like saying "whatever you were going to do anyways"... or "as you were, carry on" if you're British)
+
+`height: 30px` on the `<ul/>` and `height: 30px` on the `<li/>` meant that we would only see the first `<li/>` then with `overflow: hidden`, the rest got cut off!
+
+
+so once the user `:hover`s, we clear the height restriction and `z-index: 30` to make sure the `<ul/>` renders on top of whatever form items there are lower on the page.
+
+
+#### styling the menu
+
+the sublime slickness of our hover dropdown bidness is being hampered by it not looking slick at all!
+
+let's round the corners and put in a separator for the list items
+
+<sub>./src/App.css</sub>
+```css
+ul.hover-dropdown {
+  //...
+
+  border-radius: 5px;
+}
+
+ul.hover-dropdown li {
+  //...
+
+  cursor: pointer;
+  user-select: none;
+}
+
+ul.hover-dropdown li:first-child {
+  cursor: default;
+  background-color: #0003;
+  text-align: center;
+}
+
+ul.hover-dropdown li:not(:first-child):not(:last-child) {
+  border-bottom: 1px dashed #8888;
+}
+
+//...
+```
+
+that `:not(:first-child):not(:last-child)` is pretty ugly...
+
+[if we check our handy list of CSS pseudoselectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes), it would appear there's no better option for selecting the non-endcap items in a list. So be it - cash don't grow on trees, so we need to do tha deed
+
+
+#### mobile styling
+
+on mobile devices, `:hover` is mocked by the browser when the user presses the `<ul/>`! It wasn't always that way in the old school.
+
+however, the top list item is sometimes rendering on top of our rapper image, so let's put a `z-index: 25` on the `<img/>` so when the menu is tucked away it goes underneath Snoop (or pac or whoever)
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.header img {
+  width: auto;
+  height: 100%;
+
+  z-index: 25;
+}
+
+//...
+```
+
+
 ### autocomplete / filter dropdown (country)
 ### picking a date
 
 
+---
+
+[back to the top](#thatop)
+
+---
+
 <a name="step4"></a>
-## and it's gotta be bumpin - refactor to components
+## step 4: and it's gotta be bumpin - refactor to components
 
 ### snoop SVG, albums
+### CSS improvements... :focus-within
 ### floating label input
 ### image dropdown
 ### autocomplete dropdown
