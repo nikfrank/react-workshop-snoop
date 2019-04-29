@@ -138,9 +138,10 @@ class App extends Component {
             )}
           </div>
 
-          
+          <div className='done-container'>
+            <button onClick={this.done} className='done-button'> Done </button>
+          </div>
         </div>
-        <button onClick={this.done}> Done </button>
       </div>
     );
   }

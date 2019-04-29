@@ -111,6 +111,36 @@ class App extends Component {
 export default App;
 ```
 
+now we can throw some CSS sauce on there and it'll be good to go
+
+```html
+        <button onClick={this.done} className='done-button'> Done </button>
+```
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+.done-button {
+  background-color: white;
+  padding: 15px;
+  font-size: 24px;
+  border-radius: 5px;
+  user-select: none;
+}
+```
+
+we'll also (often) want to get rid of that pesky outine (mine is orange) once we've clicked on the `<button/>`
+
+the way we'll do that is by styling on the `:focus` [pseudoselector](https://www.w3schools.com/css/css_pseudo_classes.asp) (as clicking the `<button/>` leaves it in the `:focus` state)
+
+```css
+.done-button:focus {
+  outline: none;
+}
+```
+
+
 ---
 
 [back to the top](#thatop)
@@ -186,10 +216,12 @@ first we'll wrap our `<input />` with a container (.card) `<div>...</div>`
   render(){
     return (
       <div className='App'>
-        <div className="card">
-          <input value={this.state.rapName} onChange={this.setRapName}/>
+        <div className='form'>
+          <div className="card">
+            <input value={this.state.rapName} onChange={this.setRapName}/>
+          </div>
+          <button onClick={this.done}> Done </button>
         </div>
-        <button onClick={this.done}> Done </button>
       </div>
     );
   }
@@ -210,6 +242,13 @@ and style `.card` to be the size we want (using min-* and max-* height/width is 
 
   margin: 10px;
 }
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 ```
 
 and we can add a bit of `box-shadow` to give the card a bit of pop
@@ -233,10 +272,58 @@ and we can add a bit of `box-shadow` to give the card a bit of pop
 
 we'll be reusing this `.card` container for the rest of our form elements!
 
+we should also force the `.done-button` onto its own row
+
+```css
+.done-container {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+}
+```
+
+```html
+          <div className='done-container'>
+            <button onClick={this.done} className='done-button'> Done </button>
+          </div>
+```
+
+
+and make it look more like our cards by giving it a `box-shadow` in its default state
+
+<sub>./src/App.css</sub>
+```css
+.done-button {
+  //...
+
+  border: none;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+
+}
+```
+
+and of course, we'll need to give it back its "being pressed" state styles
+
+```css
+.done-button:active {
+  box-shadow: none;
+  border: 2px inset lightgray;
+}
+
+```
+
+
+it's the little things that make your design fly or fail. So keep your eye on the detail!
+
+
+
 
 ### floating label
 
-Now we need to make it clear to the user what this input is for!
+Now we need to make it clear to the user what this `<input/>` is for!
 
 let's add a `<label>...</label>` around it (wrapping with `<label/>` means the user clicking on the label focuses the `<input/>`)
 
@@ -247,13 +334,18 @@ let's add a `<label>...</label>` around it (wrapping with `<label/>` means the u
   render(){
     return (
       <div className='App'>
-        <div className="card">
-          <label>
-            Rap Name
-            <input value={this.state.rapName} onChange={this.setRapName}/>
-          </label>
+        <div className='form'>
+          <div className="card">
+            <label>
+              Rap Name
+              <input value={this.state.rapName} onChange={this.setRapName}/>
+            </label>
+          </div>
+
+          <div className='done-container'>
+            <button onClick={this.done} className='done-button'> Done </button>
+          </div>
         </div>
-        <button onClick={this.done}> Done </button>
       </div>
     );
   }
@@ -274,13 +366,18 @@ to accomplish this, we'll need to have a [position: relative](https://www.google
   render(){
     return (
       <div className='App'>
-        <div className="card swanky-input-container">
-          <label>
-            <input value={this.state.rapName} onChange={this.setRapName}/>
-            <span className='title'>Rap Name</span>
-          </label>
+        <div className='form'>
+          <div className="card swanky-input-container">
+            <label>
+              <input value={this.state.rapName} onChange={this.setRapName}/>
+              <span className='title'>Rap Name</span>
+            </label>
+          </div>
+
+          <div className='done-container'>
+            <button onClick={this.done} className='done-button'> Done </button>
+          </div>
         </div>
-        <button onClick={this.done}> Done </button>
       </div>
     );
   }
@@ -779,6 +876,7 @@ and we'll use the extra `<div>` wrapping the `<img/>` to make the records overla
 
 .goldRecord {
   width: 20px;
+  z-index: 20;
 }
 
 .goldRecord img {
@@ -1199,7 +1297,8 @@ ul.selectable-albums li span {
 
 .album-dropdown-base span:not(.drop-arrow):nth-child(2),
 ul.selectable-albums li span:nth-child(2) {
-  width: 50px;
+  width: 38px;
+  padding: 0 3px 0 9px;
 }
 ```
 
@@ -1567,8 +1666,17 @@ however, the top list item is sometimes rendering on top of our rapper image, so
 //...
 ```
 
+In the real world (tm), we'll probably be using this pattern to make a navigation menu, not some frivolous `<img/>` selector.
+
+So we'll have to remember it so we can use it in the next workshop!
+
 
 ### autocomplete / filter dropdown (country)
+
+
+
+
+
 ### picking a date
 
 

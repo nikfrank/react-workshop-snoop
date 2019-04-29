@@ -66,6 +66,36 @@ ul.hover-dropdown:hover {
   justify-content: center;
 }
 
+.done-container {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.done-button {
+  background-color: white;
+  padding: 15px;
+  font-size: 24px;
+  border-radius: 5px;
+  user-select: none;
+
+  border: none;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+
+}
+
+.done-button:active {
+  box-shadow: none;
+  border: 2px inset lightgray;
+}
+
+.done-button:focus {
+  outline: none;
+}
+
 .card {
   min-width: 300px;
   min-height: 80px;
@@ -155,6 +185,7 @@ option {
 
 .goldRecord {
   width: 20px;
+  z-index: 20;
 }
 
 .goldRecord img {
@@ -201,7 +232,8 @@ ul.selectable-albums li span {
 
 .album-dropdown-base span:not(.drop-arrow):nth-child(2),
 ul.selectable-albums li span:nth-child(2) {
-  width: 50px;
+  width: 38px;
+  padding: 0 3px 0 9px;
 }
 
 
