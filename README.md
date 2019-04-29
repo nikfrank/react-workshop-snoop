@@ -1053,7 +1053,7 @@ that was easy!
 we're going to render a `<ul>` when the `topAlbumOpen` is `true`
 
 <sub>./src/App.js</sub>
-```js
+```html
           <div className="card swanky-input-container">
             <span className='title'>Top Album</span>
             <div className="album-dropdown-base" onClick={this.toggleTopAlbumOpen}>
@@ -1077,7 +1077,7 @@ we're going to render a `<ul>` when the `topAlbumOpen` is `true`
 
 and in it, we'll render a list of the albums
 
-```js
+```html
        <ul className='selectable-albums'>
          {snoopAlbums.map(({ name, year, cover })=> (
            <li key={name} onClick={()=> this.selectAlbum({ name, year, cover })}>
@@ -1215,7 +1215,7 @@ to accomplish this, we'll render a `<div/>` underneath the dropdown `<ul/>` but 
 then it will take the click event for "click-out" and we can trigger a function from its `onClick`
 
 <sub>./src/App.js</sub>
-```js
+```html
     {!this.state.topAlbumOpen ? null : (
        <>
          <div className='click-out' onClick={this.clickOut}/>
