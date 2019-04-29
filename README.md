@@ -1468,7 +1468,7 @@ generally, we want to keep elements IN FLOW - we make exceptions in two cases:
 
 #### rendering the image
 
-we're going to need to import the `rappers` array (along with whatever we were `import`ing before
+we're going to need to import the `rappers` array (along with whatever we were `import`ing before)
 
 <sub>./src/App.js</sub>
 ```js
