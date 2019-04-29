@@ -56,8 +56,6 @@ export default App;
 
 and let's give it an instance method to call, using a fat arrow to log out a message `'done'` (just to test that our button works)
 
-<img src='' width=1 height=200/>
-
 <sub>./src/App.js</sub>
 ```js
 import React, { Component } from 'react';
@@ -995,7 +993,7 @@ let's render out the two possible closed states (no selection made, selection al
 .album-dropdown-base img {
   height: 45px;
   margin-top: -5px;
-  width: auto;
+  width: 45px;
 }
 
 .album-dropdown-base .drop-arrow {
@@ -1098,6 +1096,49 @@ which also closes the dropdown!
 
 now let's style it to work
 
+first we'll put some basic styles on the `<ul/>`
+
+<sub>./src/App.css</sub>
+```css
+ul.selectable-albums {
+  list-style: none;
+  padding: 0;
+```
+
+and position it just below the `.album-dropdown-base`
+
+```css
+  position: absolute;
+  top: 100%;
+```
+
+then we can limit its height and make it scrollable
+
+```css
+  max-height: 25vh;
+  overflow-y: auto;
+```
+
+finally we can add a dropshadow to match the decor
+
+```css
+  margin: 2px 0 0 0;
+
+  background-color: white;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+  
+}
+```
+
+
+now that we have the `<ul/>` styled, we can style the `<li/>` tags within it
+
+largely, we'll want to reapply the styles we wrote for the base
+
+
 <sub>./src/App.css</sub>
 ```css
 .album-dropdown-base,
@@ -1115,10 +1156,6 @@ ul.selectable-albums li {
   padding-right: 15px;
 }
 
-ul.selectable-albums li:hover {
-  background-color: #eee;
-}
-
 .album-dropdown-base img,
 ul.selectable-albums img {
   height: 45px;
@@ -1126,6 +1163,25 @@ ul.selectable-albums img {
   width: 45px;
 }
 
+.album-dropdown-base .drop-arrow {
+  position: absolute;
+  right: 5px;
+  user-select: none;
+}
+```
+
+now we can set a hover state on the items to make them more user-interactive
+
+
+```css
+ul.selectable-albums li:hover {
+  background-color: #eee;
+}
+```
+
+and we can limit the size and set text overflow to `ellipsis` (aka to cut off the overflow text with a '...')
+
+```css
 .album-dropdown-base span:not(.drop-arrow),
 ul.selectable-albums li span {
   display: inline-block;
@@ -1139,37 +1195,18 @@ ul.selectable-albums li span {
 ul.selectable-albums li span:nth-child(2) {
   width: 50px;
 }
-
-
-.album-dropdown-base .drop-arrow {
-  position: absolute;
-  right: 5px;
-  user-select: none;
-}
-
-ul.selectable-albums {
-  list-style: none;
-  padding: 0;
-
-  position: absolute;
-  top: 100%;
-
-  max-height: 25vh;
-  overflow-y: auto;
-  
-  margin: 2px 0 0 0;
-
-  background-color: white;
-  box-shadow:
-    0px 1px 3px 0px rgba(0,0,0,0.2),
-    0px 1px 1px 0px rgba(0,0,0,0.14),
-    0px 2px 1px -1px rgba(0,0,0,0.12);
-  
-}
 ```
+
+that looks pretty good for 50 lines of CSS
 
 
 #### the click out
+
+finally, the user instinctually will expect that clicking outside of the drop down will close the dropdown and gobble up the click event (not trigger `onClick` for whatever outside the dropdown they clicked)
+
+to accomplish this, we'll render a `<div/>` underneath the dropdown `<ul/>` but above everything else
+
+then it will take the click event for "click-out" and we can trigger a function from its `onClick`
 
 <sub>./src/App.js</sub>
 ```js
@@ -1189,7 +1226,7 @@ ul.selectable-albums {
     )}
 ```
 
-here we're using the newest syntax for `React.Fragment`, which is a fake element which just wraps a bunch of tags so that there's technically one root element returned from an expression (here we need it because of the conditional ternary operator)
+here we're using the newest syntax for `React.Fragment` ie `<> ... </>`, which is a fake element which just wraps a bunch of tags so that there's technically one root element returned from an expression (here we need it because of the conditional ternary operator is an expression, which means it can only evaluate to one root element)
 
 and the instance method
 
