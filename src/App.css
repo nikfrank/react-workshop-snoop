@@ -147,6 +147,8 @@ option {
   top: 5px;
   left: 5px;
   cursor: pointer;
+
+  z-index: 15;
   
   font-weight: 300;
   font-size: 16px;
@@ -212,6 +214,7 @@ ul.selectable-albums li {
 .album-dropdown-base {
   padding-top: 30px;
   padding-right: 15px;
+  z-index: 10;
 }
 
 ul.selectable-albums li:hover {
@@ -318,7 +321,6 @@ ul.selectable-countries {
     0px 1px 3px 0px rgba(0,0,0,0.2),
     0px 1px 1px 0px rgba(0,0,0,0.14),
     0px 2px 1px -1px rgba(0,0,0,0.12);
-  
 }
 
 ul.selectable-countries li {

@@ -8,6 +8,12 @@ import snoopAlbums from './snoopAlbums';
 import rappers from './rappers';
 import countries from './countries';
 
+const score = (query, option)=>
+  [...Array(query.length)].reduce((p, c, i)=>
+    p + (option.toLowerCase().includes( query.slice(0, query.length -i).toLowerCase() ) ?
+         query.length - i : 0
+    ), -Math.min(10, option.length));
+
 class App extends Component {
   state = {
     rapName: 'Nate Dogg z"l',
@@ -40,13 +46,23 @@ class App extends Component {
   setJob = event => this.setState({ job: event.target.value })
 
   selectAlbum = topAlbum=> this.setState({ topAlbum, topAlbumOpen: false })
-  clickOut = ()=> this.setState({ topAlbumOpen: false })
+  clickOut = ()=> this.setState({
+    topAlbumOpen: false,
+    selectableCountries: [],
+    countryQuery: this.state.country,
+  })
 
   setTopRapper = topRapper => this.setState({ topRapper })
 
   setCountryQuery = event => this.setState({
     countryQuery: event.target.value,
-    selectableCountries: countries.slice(0,3),
+    selectableCountries: countries
+      .map(country => [country, score(event.target.value, country)])
+      .sort((ca, cb)=> ca[1] > cb[1] ? -1 : 1)
+      .map(c=> c[0])
+      .slice(0,3),
+    country: countries
+      .find(country => country.toLowerCase() === event.target.value.toLowerCase()) || this.state.country,
   })
 
   selectCountry = country => this.setState({ country, selectableCountries: [], countryQuery: country })
@@ -149,17 +165,20 @@ class App extends Component {
           </div>
 
           <div className="card swanky-input-container">
-            <span className='title'>Country</span>
             <div className="country-dropdown-base">
               <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
+              <span className='title'>Country</span>
               {this.state.selectableCountries.length ? (
-                 <ul className='selectable-countries'>
-                   {this.state.selectableCountries.map(country=> (
-                     <li key={country} onClick={()=> this.selectCountry(country)}>
-                       {country}
-                     </li>
-                   ))}
-                 </ul>
+                 <>
+                   <div className='click-out' onClick={this.clickOut}/>
+                   <ul className='selectable-countries'>
+                     {this.state.selectableCountries.map(country=> (
+                       <li key={country} onClick={()=> this.selectCountry(country)}>
+                         {country}
+                       </li>
+                     ))}
+                   </ul>
+                 </>
               ): null}
             </div>
           </div>

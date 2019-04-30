@@ -587,6 +587,8 @@ now we can put a transition on both of those styles and everything should be sol
   top: 5px;
   left: 5px;
   cursor: pointer;
+
+  z-index: 15;
   
   font-weight: 300;
   font-size: 16px;
@@ -1371,6 +1373,7 @@ Let's be proactive and funk it up
 .album-dropdown-base {
   padding-top: 30px;
   padding-right: 15px;
+  z-index: 10;
 }
 
 ul.selectable-albums::-webkit-scrollbar {
@@ -1690,7 +1693,7 @@ One new thing we'll learn here is how to `.filter` the list items on the fly - b
 
 The data we'll autocomplete will be the country of origin.
 
-For source data, I've made a [query in wikidata which grabs the list of countries](https://query.wikidata.org/#%23Cats%0ASELECT%20%3Fitem%20%3FitemLabel%20%0AWHERE%20%0A%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ6256.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%7D)
+For source data, we can find a nice JSON list [here](https://gist.github.com/Keeguon/2310008)
 
 if you have some political opinions about some of the response items from this query (eg my dad says Canada is really just part of USA and shouldn't be on the list), feel free to edit the output as you see fit after downloading the resultant JSON file.
 
@@ -1704,7 +1707,7 @@ the output from wikidata comes as
 
 ```js
 [
-  { item: 'some url in wikidata', itemLabel: 'the actual name that we want to use' },
+  { name: 'the actual name that we want to use', code: 'some two letter code we don\'t care about' },
   //...
 ]
 ```
@@ -1712,14 +1715,14 @@ the output from wikidata comes as
 in order to get the format we want (just the names), I've copy-pasted the output into the browser console (shift + control + i) to run a cleanup script
 
 ```js
-const output = [{ /* entire output from downloaded JSON file */ }];
+const output = [{ /* entire output from JSON file */ }];
 ```
 
 to print out the data that we'll want for the file, we can do
 
 
 ```js
-JSON.stringify(output.map(i => i.itemLabel)).replace(/,/g, ',\n')
+JSON.stringify(output.map(i => i.name)).replace(/",/g, '",\n')
 ```
 
 then copy pasted the result (without the containing "double quotes") into my file
@@ -1728,7 +1731,7 @@ how does it work?
 
 first we `.map` out the field from each object that we want (into an array of country names)
 
-then we `.replace` all the `,`s (using the regex `/,/g` with a g = global flag... ie `.replaceAll`) with `',\n'` ie a comma and a newline character.
+then we `.replace` all the end of item sequences `",`s (using the regex `/",/g` with a g = global flag... ie `.replaceAll`) with `'",\n'` ie a double quote comma and a newline character.
 
 now that we did that, we can
 
@@ -1763,9 +1766,9 @@ export default [
 //...
 
           <div className="card swanky-input-container">
-            <span className='title'>Country</span>
             <div className="country-dropdown-base">
               <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
+              <span className='title'>Country</span>
               {this.state.selectableCountries.length ? (
                  <ul className='selectable-countries'>
                    {this.state.selectableCountries.map(country=> (
@@ -1863,12 +1866,107 @@ now we need the autocomplete to do something worthwhile
 
 sort by best match (match hard contains case insensitive)
 
+we need to score each country by how close a match it is to our current text
 
-#### styling, hiding the dropdown after focus
+then sort by the score
 
-needs an onFocus, and a clickOut
+then map back to just the name of the country
+
+then take just the top three
+
+```js
+  setCountryQuery = event => this.setState({
+    countryQuery: event.target.value,
+    selectableCountries: countries
+      .map(country => [country, score(event.target.value, country)])
+      .sort((ca, cb)=> ca[1] > cb[1] ? -1 : 1)
+      .map(c=> c[0])
+      .slice(0,3),
+    country: countries
+      .find(country => country.toLowerCase() === event.target.value.toLowerCase()) || this.state.country,
+  })
+
+```
+
+but there's a bug! `score` is undefined, which is not a function!
+
+so let's write a `score` function, which takes `(query, option)=>` our current query text and each option for matching, and returns a number which says how good a match they are
+
+Here, there's a million ways to do this (one time I programmed a text matching algorithm based on the scrabble values of the letters matched) - here I'll show you the simplest one I thought of
+
+```
+start the score at 0
+first, check if the entire query is included in the option -> if it is add (query.length) to the score
+for every number N less than the length of the query, take the first N characters of the query
+ -> check if those are included in the option -> if they are add (N) to the score
+subtract the length of the option (or 10, whichever is less ... we don't want to punish long names too much)
+```
+
+The score will be maximized if the entire query is found and there are no other characters
+
+let's see that in js
+
+```js
+const score = (query, option)=>
+  [...Array(query.length)].reduce((p, c, i)=>
+    p + (option.toLowerCase().includes( query.slice(0, query.length -i).toLowerCase() ) ?
+         query.length - i : 0
+    ), -Math.min(10, option.length));
+```
+
+I've skipped the step of `start at 0` and `subtract the length or 10` by starting at `-length, or -10`
+
+`[...Array(query.length)]` will give us an Array of the right length which we can `.reduce` over
+
+`.reduce((p, c, i)=>` is a reduce function (p = previous value, c = current item, i = index)
+
+here, there aren't really current items, so all we care about is p = the running total and i the index we're looking at
+
+`p + (...)` we return the previous running total plus whatever value we compute for this index
+
+`option.toLowerCase().includes( ... ) ? query.length - i : 0` if the option contains (... the part of the query ...) evaluate the length of the part of the query (to be added to the running total), otherwise 0 (don't change the running total)
+
+`query.slice(0, query.length -i).toLowerCase()` take the first N letters of the query (i counts up from 0, so `query.length -i` will count down from the length of the query) to be compared to
+
+both strings are forced into lower case in order to ignore case differences between the query and the option
 
 
+#### styling, little UXs
+
+needs a clickOut, arrow keys
+
+```js
+    country: countries.find(country => country.toLowerCase() === event.target.value.toLowerCase()),
+```
+
+```html
+          <div className="card swanky-input-container">
+            <div className="country-dropdown-base">
+              <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
+              <span className='title'>Country</span>
+              {this.state.selectableCountries.length ? (
+                 <>
+                   <div className='click-out' onClick={this.clickOut}/>
+                   <ul className='selectable-countries'>
+                     {this.state.selectableCountries.map(country=> (
+                       <li key={country} onClick={()=> this.selectCountry(country)}>
+                         {country}
+                       </li>
+                     ))}
+                   </ul>
+                 </>
+              ): null}
+            </div>
+          </div>
+```
+
+```js
+  clickOut = ()=> this.setState({
+    topAlbumOpen: false,
+    selectableCountries: [],
+    countryQuery: this.state.country,
+  })
+```
 
 
 ### picking a date
