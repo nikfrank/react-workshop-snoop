@@ -6,6 +6,7 @@ import goldRecord from './goldRecord.png';
 
 import snoopAlbums from './snoopAlbums';
 import rappers from './rappers';
+import countries from './countries';
 
 class App extends Component {
   state = {
@@ -19,6 +20,8 @@ class App extends Component {
     topAlbumOpen: false,
     topRapper: rappers[3],
     startDate: null,
+    countryQuery: '',
+    selectableCountries: [],
   }
 
   done = ()=>{
@@ -40,7 +43,14 @@ class App extends Component {
   clickOut = ()=> this.setState({ topAlbumOpen: false })
 
   setTopRapper = topRapper => this.setState({ topRapper })
-    
+
+  setCountryQuery = event => this.setState({
+    countryQuery: event.target.value,
+    selectableCountries: countries.slice(0,3),
+  })
+
+  selectCountry = country => this.setState({ country, selectableCountries: [], countryQuery: country })
+  
   render(){
     return (
       <div className='App'>
@@ -138,6 +148,23 @@ class App extends Component {
             )}
           </div>
 
+          <div className="card swanky-input-container">
+            <span className='title'>Country</span>
+            <div className="country-dropdown-base">
+              <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
+              {this.state.selectableCountries.length ? (
+                 <ul className='selectable-countries'>
+                   {this.state.selectableCountries.map(country=> (
+                     <li key={country} onClick={()=> this.selectCountry(country)}>
+                       {country}
+                     </li>
+                   ))}
+                 </ul>
+              ): null}
+            </div>
+          </div>
+
+          
           <div className='done-container'>
             <button onClick={this.done} className='done-button'> Done </button>
           </div>

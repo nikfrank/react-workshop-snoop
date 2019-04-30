@@ -1253,6 +1253,9 @@ ul.selectable-albums li {
   justify-content: space-between;
   cursor: pointer;
   padding: 10px;
+  position: relative;
+  z-index: 30;
+  background-color: white;
 }
 
 
@@ -1674,11 +1677,204 @@ So we'll have to remember it so we can use it in the next workshop!
 
 ### autocomplete / filter dropdown (country)
 
+Anyone who is anyone uses google (probably to answer most of the questions you've had working through this workshop), and google has autocomplete
+
+so Snoop figures he needs some autocomplete, and frankly - can you blame him? autocomplete is pretty fly.
+
+To make this, we'll duplicate all of our markup from the `<input/>`s we made before, plus we'll add the dropdown pattern we used in the album selector.
+
+One new thing we'll learn here is how to `.filter` the list items on the fly - based on what the user has typed already.
+
+
+#### list of countries
+
+The data we'll autocomplete will be the country of origin.
+
+For source data, I've made a [query in wikidata which grabs the list of countries](https://query.wikidata.org/#%23Cats%0ASELECT%20%3Fitem%20%3FitemLabel%20%0AWHERE%20%0A%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ6256.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%7D)
+
+if you have some political opinions about some of the response items from this query (eg my dad says Canada is really just part of USA and shouldn't be on the list), feel free to edit the output as you see fit after downloading the resultant JSON file.
+
+Snoop doesn't really care - he just wants his autocomplete to work and his fans (wherever they are from) to have a good time using it - so in the name of laziness and good vibes, I won't be editing the output at all, even though doing so contravenes my father's views on Canadian sovereignty.
+
+
+
+#### formatting the data
+
+the output from wikidata comes as
+
+```js
+[
+  { item: 'some url in wikidata', itemLabel: 'the actual name that we want to use' },
+  //...
+]
+```
+
+in order to get the format we want (just the names), I've copy-pasted the output into the browser console (shift + control + i) to run a cleanup script
+
+```js
+const output = [{ /* entire output from downloaded JSON file */ }];
+```
+
+to print out the data that we'll want for the file, we can do
+
+
+```js
+JSON.stringify(output.map(i => i.itemLabel)).replace(/,/g, ',\n')
+```
+
+then copy pasted the result (without the containing "double quotes") into my file
+
+how does it work?
+
+first we `.map` out the field from each object that we want (into an array of country names)
+
+then we `.replace` all the `,`s (using the regex `/,/g` with a g = global flag... ie `.replaceAll`) with `',\n'` ie a comma and a newline character.
+
+now that we did that, we can
+
+`$ touch ./src/countries.js`
+
+and export that output list
+
+<sub>./src/countries.js</sub>
+```js
+export default [
+  'Canada',
+  'Japan',
+  //... etc ...
+];
+```
+
+#### making another input
+
+
+<sub>./src/App.js</sub>
+```js
+  state = {
+    //...
+
+    countryQuery: '',
+    selectableCountries: [],
+  }
+
+```
+
+```html
+//...
+
+          <div className="card swanky-input-container">
+            <span className='title'>Country</span>
+            <div className="country-dropdown-base">
+              <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
+              {this.state.selectableCountries.length ? (
+                 <ul className='selectable-countries'>
+                   {this.state.selectableCountries.map(country=> (
+                     <li key={country} onClick={()=> this.selectCountry(country)}>
+                       {country}
+                     </li>
+                   ))}
+                 </ul>
+              ): null}
+            </div>
+          </div>
+//...
+```
+
+
+#### making another dropdown <ul/>
+
+in our setter instance method for `state.countryQuery`, we'll need to set a list of `state.selectableCountries`
+
+<sub>./src/App.js</sub>
+```js
+//...
+import countries from './countries';
+
+  //...
+
+  setCountryQuery = event => this.setState({
+    countryQuery: event.target.value,
+    selectableCountries: countries.slice(0,3),
+  })
+
+  selectCountry = country => this.setState({ country, selectableCountries: [], countryQuery: country })
+
+  //...
+```
+
+
+<sub>./src/App.css</sub>
+```css
+//...
+
+
+.country-dropdown-base {
+  position: relative;
+  height: 100%;
+}
+
+.country-dropdown-base input {
+  background-color: #0000;
+}
+
+
+ul.selectable-countries {
+  list-style: none;
+  padding: 0;
+
+  position: absolute;
+  top: 100%;
+  width: 100%;
+
+  max-height: 25vh;
+  overflow-y: auto;
+  
+  margin: 2px 0 0 0;
+
+  background-color: white;
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+  
+}
+
+ul.selectable-countries li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px;
+}
+
+ul.selectable-countries li:hover {
+  background-color: #eee;
+}
+
+```
+
+that's pretty straightforward eh?
+
+now we need the autocomplete to do something worthwhile
+
+
+
+#### filtering and sorting on the fly
+
+sort by best match (match hard contains case insensitive)
+
+
+#### styling, hiding the dropdown after focus
+
+needs an onFocus, and a clickOut
 
 
 
 
 ### picking a date
+
+
+(( copy from previous version ? ))
 
 
 ---
