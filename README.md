@@ -1226,10 +1226,12 @@ then we can limit its height and make it scrollable
   overflow-y: auto;
 ```
 
-finally we can add a dropshadow to match the decor
+finally we can add a box-shadow to match the decor and a z-index to render it correctly
 
 ```css
   margin: 2px 0 0 0;
+
+  z-index: 30;
 
   background-color: white;
   box-shadow:
@@ -1600,7 +1602,7 @@ ul.hover-dropdown li {
 
 ul.hover-dropdown:hover {
   height: initial;
-  z-index: 30;
+  z-index: 50;
 }
 
 //...
@@ -1837,6 +1839,8 @@ ul.selectable-countries {
   overflow-y: auto;
   
   margin: 2px 0 0 0;
+
+  z-index: 30;
 
   background-color: white;
   box-shadow:
