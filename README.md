@@ -1971,6 +1971,8 @@ we need a click out here as well
           </div>
 ```
 
+we can reuse `this.clickOut` from before, we'll need to reset a few more `state` values therein now
+
 ```js
   clickOut = ()=> this.setState({
     topAlbumOpen: false,
