@@ -2139,6 +2139,7 @@ the rest of this workshop is targeting the senior dev track.
 ### image dropdown
 ### autocomplete dropdown
 ### SCSS
+### destructuring this.state in render
 
 
 <a name="step5"></a>
