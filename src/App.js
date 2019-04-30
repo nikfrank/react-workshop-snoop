@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import emailRegex from './emailRegex';
 import goldRecord from './goldRecord.png';
 
@@ -66,6 +70,8 @@ class App extends Component {
   })
 
   selectCountry = country => this.setState({ country, selectableCountries: [], countryQuery: country })
+
+  setStartDate = startDate => this.setState({ startDate })
   
   render(){
     return (
@@ -164,8 +170,8 @@ class App extends Component {
             )}
           </div>
 
-          <div className="card swanky-input-container">
-            <div className="country-dropdown-base">
+          <div className='card swanky-input-container'>
+            <div className='country-dropdown-base'>
               <input value={this.state.countryQuery} onChange={this.setCountryQuery}/>
               <span className='title'>Country</span>
               {this.state.selectableCountries.length ? (
@@ -183,6 +189,10 @@ class App extends Component {
             </div>
           </div>
 
+          <div className='card date-input-container swanky-input-container'>
+            <DatePicker selected={this.state.startDate} onChange={this.setStartDate}/>
+            <span className='title'>Start Date</span>
+          </div>
           
           <div className='done-container'>
             <button onClick={this.done} className='done-button'> Done </button>

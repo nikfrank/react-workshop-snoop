@@ -334,3 +334,18 @@ ul.selectable-countries li {
 ul.selectable-countries li:hover {
   background-color: #eee;
 }
+
+.card .react-datepicker-popper {
+  z-index: 40;
+}
+
+.date-input-container input {
+  height: 60px;
+  width: 286px;
+  top: 0;
+}
+
+.date-input-container:focus-within span.title {
+  color: green;
+  font-size: 12px;  
+}

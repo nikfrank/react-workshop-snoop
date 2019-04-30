@@ -1805,6 +1805,10 @@ import countries from './countries';
   //...
 ```
 
+here when we select a country (the user clicked an option), we want to set `state.country` - the actual value AND `state.countryQuery` - the value the user sees to the result
+
+AND we want to se `state.selectableCountries` to empty, so it doesn't get rendered anymore
+
 
 <sub>./src/App.css</sub>
 ```css
@@ -1864,7 +1868,13 @@ now we need the autocomplete to do something worthwhile
 
 #### filtering and sorting on the fly
 
-sort by best match (match hard contains case insensitive)
+if there's an exact match, we should set that into `state.country`
+
+meanwhile
+
+to generate an autocomplete list
+
+we want to sort by best match (match hard contains case insensitive)
 
 we need to score each country by how close a match it is to our current text
 
@@ -1931,13 +1941,10 @@ here, there aren't really current items, so all we care about is p = the running
 both strings are forced into lower case in order to ignore case differences between the query and the option
 
 
-#### styling, little UXs
+#### click out
 
-needs a clickOut, arrow keys
+we need a click out here as well
 
-```js
-    country: countries.find(country => country.toLowerCase() === event.target.value.toLowerCase()),
-```
 
 ```html
           <div className="card swanky-input-container">
@@ -1971,9 +1978,146 @@ needs a clickOut, arrow keys
 
 ### picking a date
 
+Snoop wants to know when you can start working!
 
-(( copy from previous version ? ))
+To make our life easy, we're not going to build a datepicker from scratch - that'd be reinventing the wheel!
 
+Instead, we're going to use [Hacker0x01's popular react-datepicker module](https://github.com/Hacker0x01/react-datepicker)
+
+`$ yarn add react-datepicker`
+
+the react-datepicker docs should give you all you need to pick a date and put it in the state!
+
+
+the team that wrote react-datepicker made their `<DatePicker/>` Component using the same controlled input pattern, which should make it very easy to use
+
+just remember to put it in a `<div className='card'>...</div>`
+
+
+<details>
+<summary>Click here to view solution for this section</summary>
+
+```html
+
+          <div className='card date-input-container swanky-input-container'>
+            <DatePicker selected={this.state.startDate} onChange={this.setStartDate}/>
+            <span className='title'>Start Date</span>
+          </div>
+```
+
+```js
+  setStartDate = startDate => this.setState({ startDate })
+```
+
+</details>
+
+
+#### shimming the CSS
+
+now that we got our `<DatePicker/>` working, we need to fix a few CSS bugs
+
+1. the popper renders underneath some other form components
+2. the `<input/>` doesn't take up the right space in the `.card`
+3. our `span.title` isn't highlighting correctly on `:focus`
+
+how are we going to figure out how to fix CSS in someone else's code?
+
+Snoop famously says "gangsters use the dev tools"... so let's inspect the elements (right click them) in the dev tools and figure out why the bugs are happening
+
+1. the popper has a z-index problem
+
+when we click the little `<input/>` to get the date-picker-popper, we can see in the HTML elements panel (by selecting the correct div and inspecting its CSS rules) that some part of the datepicker.css is giving it `z-index: 1`
+
+now we can test if changing that would work (we can edit the CSS live in the browser)
+
+so if we can just get `z-index: 40` onto that `<div/>`, everything will be fine
+
+<sub>./src/App.css</sub>
+```css
+.react-datepicker-popper {
+  z-index: 40;
+}
+```
+
+... hmm, that didn't work... why?
+
+if we go to inspect the element again, we see that our `z-index: 40` rule is lower on the list than the `z-index: 1` rule and is being overridden!
+
+the reason for this is the C in CSS (cascading, as in: rules that are written later override previous rules)
+
+as it turns out, the compiler is putting our CSS before the lib CSS, so their's overrides ours!
+
+how can we override their's?
+
+good question: the answer is [CSS specificity](https://www.google.com/search?q=css+specificity)
+
+all we have to do is make a MORE SPECIFIC rule, and CSS will apply ours over their's!
+
+```css
+.card .react-datepicker-popper {
+  z-index: 40;
+}
+```
+
+it turns out, 2 classNames is more specific than 1 (who would've guessed that)
+
+so la di da di, we likes to party, we override your CSS, we don't bother nobody.
+
+
+
+2. the `<input/>` sizing
+
+when we sized our `<input/>`s before, we relied on the `.card` being the relative reference frame element.
+
+however, when we inspect the current state of affairs, we see that the `react-datepicker` library is putting its own `relative` div inbetween ours and the `<input/>`
+
+hmm...
+
+there's not much of a clean solution to this.
+
+In general, I'd rather keep to the relative sizing styles we've been using so far
+
+that said, in this one instance we can hard code some pixel sizes on the input
+
+```css
+.date-input-container input {
+  height: 60px;
+  width: 286px;
+  top: 0;
+}
+```
+
+not elegant, but it'll do.
+
+
+3. the title isn't highlighting
+
+this is due to our rule being `input:focus + span.title`
+
+which relied on the `<input/>` and `<span/>` being adjacent siblings
+
+now when we inspect the datepicker, we see that the `<input/>` is nested inside some `<div/>`s, and is therefore no longer an adjacent sibling
+
+so we'll need a new solution... we can use `:focus-within` pseudoselector, which is a bit less specific, but works nicely
+
+```css
+.date-input-container:focus-within span.title {
+  color: green;
+  font-size: 12px;
+}
+```
+
+Snoop says: Gangsters use the dev tools
+
+sometimes when we deal with third party CSS, we'll end up with bugs caused by unforseen code interactions
+
+in those instances (also when we cause the bugs ourselves) the inspect elements panel is extremely powerful
+
+it tells us what HTML elements we have and how they're structured, AND all the CSS that applies to them and in which order
+
+AND it let's us edit the CSS live to try out solutions we think of.
+
+As soon as I started using these features to their maximum, my CSS skillz EXPLODED.
 
 ---
 
@@ -1981,11 +2125,12 @@ needs a clickOut, arrow keys
 
 ---
 
+the rest of this workshop is targeting the senior dev track.
+
 <a name="step4"></a>
 ## step 4: and it's gotta be bumpin - refactor to components
 
-### snoop SVG, albums
-### CSS improvements... :focus-within
+### rapper images, menu dropdown
 ### floating label input
 ### image dropdown
 ### autocomplete dropdown
