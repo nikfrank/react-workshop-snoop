@@ -1193,9 +1193,7 @@ and in it, we'll render a list of the albums
 and of course, an instance method to select the album
 
 ```js
-
   selectAlbum = topAlbum => this.setState({ topAlbum, topAlbumOpen: false })
-  
 ```
 
 which also closes the dropdown!
@@ -1733,7 +1731,7 @@ how does it work?
 
 first we `.map` out the field from each object that we want (into an array of country names)
 
-then we `.replace` all the end of item sequences `",`s (using the regex `/",/g` with a g = global flag... ie `.replaceAll`) with `'",\n'` ie a double quote comma and a newline character.
+then we `.replace` all the end of item sequence `",`s (using the regex `/",/g` with a g = global flag... ie `.replaceAll`) with `'",\n'` ie a double quote comma and a newline character.
 
 now that we did that, we can
 
