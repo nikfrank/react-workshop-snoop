@@ -132,6 +132,57 @@ solutions go here
 
 ---
 
+## containers and flex
+
+mostly, we won't render input elements willy nilly around our page. Usually, we'll give our `<input/>`s a container `<div/>` which allows us to
+easily style the `<input/>` along with elements which need to be positioned nearby (like context icons)
+
+We can then wrap those containers with a `.form-container` which will allow us to use CSS flex-box to choose the layout we want for our form inputs
+
+let's practice these skillz!
+
+
+### exercises
+
+in <sub>./src/App.js</sub> let's ...
+
+1. make a `<select/>` within a container `<div/>` which determines the `border-color` of its container `<div/>`
+
+2. wrap three other examples from above in container `<div/>`s
+
+3. wrap our four containers in a `.form-container` which is `display: flex`
+
+4. make a `<button/>` which toggles our `.form-container` between `flex-direction: column` and `column-reverse`
+
+5. use `display: flex` on our containers to center the `<input/>`s vertically AND horizontally
+
+
+### solutions
+
+<details>
+<summary>Click here to view solutions for this section</summary>
+
+
+solutions go here
+
+</details>
+
+
+
+
+
+
+
+
+## lists: map and filter
+
+5. filter out items by setting `height: 0` and transition their height (smooth filtering!)
+
+
+
+
+---
+
 ## exercise topic
 
 spiel on topic for a bit, put some links to learn about the topic
