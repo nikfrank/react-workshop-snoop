@@ -2138,6 +2138,7 @@ the rest of this workshop is targeting the senior dev track.
 ### floating label input
 ### image dropdown
 ### autocomplete dropdown
+### SCSS
 
 
 <a name="step5"></a>
