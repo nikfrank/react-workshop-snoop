@@ -1938,7 +1938,9 @@ here, there aren't really current items, so all we care about is p = the running
 
 `option.toLowerCase().includes( ... ) ? query.length - i : 0` if the option contains (... the part of the query ...) evaluate the length of the part of the query (to be added to the running total), otherwise 0 (don't change the running total)
 
-`query.slice(0, query.length -i).toLowerCase()` take the first N letters of the query (i counts up from 0, so `query.length -i` will count down from the length of the query) to be compared to
+`query.slice(0, query.length -i).toLowerCase()` take the first N letters of the query (`i` counts up from `0`, so `query.length -i` will count down from the length of the query) to be compared to
+
+`, -Math.min(10, option.length)` start the reduce's running total (`p`'s init value) at `-length` or `-10` whichever is closer to `0`
 
 both strings are forced into lower case in order to ignore case differences between the query and the option
 
