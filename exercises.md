@@ -14,7 +14,7 @@ we'll cover in these exercises the most common patterns for single state value u
 [pseudoselectors]()
 
 
-### exercises
+## binding inputs
 
 in <sub>./src/App.js</sub> let's ...
 
@@ -176,7 +176,15 @@ solutions go here
 
 ## lists: map and filter
 
-5. filter out items by setting `height: 0` and transition their height (smooth filtering!)
+1. make an `[]` array of `'names'` in `state` and use `.map  => <li>` to render them
+
+2. make an `[]` array of `{}` objects with `{ name: ... }` in `state` and use `.map` to render them
+
+3. in your `render` function, chain a `.filter` before the `.map` to render only names with an 'n' in them
+
+4. make a toggler `<button/>` which turns the `.filter` behaviour on / off
+
+5. filter out items without `.filter` by setting `height: 0` and transition their height (smooth filtering!)
 
 
 
