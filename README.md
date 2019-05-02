@@ -884,7 +884,7 @@ and we'll use the extra `<div>` wrapping the `<img/>` to make the records overla
 
 .goldRecord img {
   width: 50px;
-  height: 100%;
+  height: 50px;
 }
 ```
 
