@@ -11,14 +11,16 @@ where we left off the exercises from the xcoin workshop, we had just written our
 
 we'll cover in these exercises the most common patterns for single state value user input flows
 
-[pseudoselectors]()
+[pseudoselectors](https://www.google.com/search?q=css+pseudoselectors)
 
 
 ## binding inputs
 
 in <sub>./src/App.js</sub> let's ...
 
-1. render an `<input/>`, bind it to a `state` value, and style it in the `:hover` `:focus` and `:active` states
+1. render an `<input/>`, bind it to a `state` value, and style it in the `:hover` and `:focus` states
+
+  render also a button styled in the `:hover` and `:active` states
 
 2. render a `<label/>` around our `<input/>`, style the `<label/>` when the `<input/>` is `:focus`
 
@@ -34,15 +36,280 @@ in <sub>./src/App.js</sub> let's ...
 <details>
 <summary>Click here to view solutions for this section</summary>
 
+1.  render an `<input/>`, bind it to a `state` value, and style it in the `:hover` and `:focus` states
 
-solutions go here
+  render also a button styled in the `:hover` and `:active` states
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '' }
+
+  setWord = e => this.setState({ word: e.target.value })
+
+  render() {    
+    return (
+      <div className="App">
+        <input className="word-input" value={this.state.word} onChange={this.setWord} />
+        <button className='heard-button'
+                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
+          have you heard?
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+I wrote my solution in SCSS (to get SCSS in `create-react-app` run `$ yarn add node-sass` and resuffix your file)
+
+but I will provide a CSS translation below
+
+<sub>./src/App.scss</sub>
+```scss
+input.word-input {
+  &:hover {
+    font-size: 1.25 rem;
+  }
+
+  &:focus {
+    font-size: 1.25 rem;
+    color: #040;
+  }
+}
+
+button.heard-button {
+  background-color: #00f;
+  color: #fff;
+  
+  &:hover {
+    background-color: #38f;
+    color: #000;
+  }
+
+  &:active {
+    background-color: #00a;
+    color: #fff;
+  }
+}
+```
+
+OR
+
+<sub>./src/App.scss</sub>
+```css
+input.word-input:hover {
+  font-size: 1.25 rem;
+}
+
+input.word-input:focus {
+  font-size: 1.25 rem;
+  color: #040;
+}
+
+button.heard-button {
+  background-color: #00f;
+  color: #fff;
+}
+
+button.heard-button:hover {
+  background-color: #38f;
+  color: #000;
+}
+
+button.heard-button:active {
+  background-color: #00a;
+  color: #fff;
+}
+```
 
 </details>
 
 
 
+2. render a `<label/>` around our `<input/>`, style the `<label/>` when the `<input/>` is `:focus`
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '' }
+
+  setWord = e => this.setState({ word: e.target.value })
+
+  render() {    
+    return (
+      <div className="App">
+        <label className='word-label'>
+          what's the word?
+          <input className="word-input" value={this.state.word} onChange={this.setWord} />
+        </label>
+        <button className='heard-button'
+                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
+          have you heard?
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+<sub>./src/App.css</sub>
+```css
+label.word-label:focus-within {
+  background-color: #eee;
+}
+```
 
 
+3. if the `<input/>` has something put in it, render the input next to the `<input/>` in a `<span/>`
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '' }
+
+  setWord = e => this.setState({ word: e.target.value })
+
+  render() {    
+    return (
+      <div className="App">
+        <label className='word-label'>
+          what's the word?
+          <input className="word-input" value={this.state.word} onChange={this.setWord} />
+        </label>
+        {this.state.word && (
+           <span>{this.state.word}</span>
+        )}
+        <button className='heard-button'
+                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
+          have you heard?
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+4. when the value of the `<input/>` is "bird" render an `<img/>` of a bird
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '' }
+
+  setWord = e => this.setState({ word: e.target.value })
+
+  render() {    
+    return (
+      <div className="App">
+        <label className='word-label'>
+          what's the word?
+          <input className="word-input" value={this.state.word} onChange={this.setWord} />
+        </label>
+        {this.state.word && (
+           <span>{this.state.word}</span>
+        )}
+        <button className='heard-button'
+                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
+          have you heard?
+        </button>
+
+        {this.state.word === 'bird' && (
+           <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
+        )}
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+5. render another `<input/>` with `type='number'` and turn it `red` when it is less than `0` using `style` prop or `className`
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '', money: 0 }
+
+  setWord = e => this.setState({ word: e.target.value })
+
+  setMoney = e => this.setState({ money: 1*e.target.value })
+  
+  render() {    
+    return (
+      <div className="App">
+        <label className='word-label'>
+          what's the word?
+          <input className="word-input" value={this.state.word} onChange={this.setWord} />
+        </label>
+        {this.state.word && (
+           <span>{this.state.word}</span>
+        )}
+        <button className='heard-button'
+                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
+          have you heard?
+        </button>
+
+        {this.state.word === 'bird' && (
+           <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
+        )}
+
+        <label className='money-label'>
+          $
+          <input className={this.state.money < 0 ? 'in-the-red' : 'in-the-black'}
+                 type='number'
+                 value={this.state.money} onChange={this.setMoney}/>
+        </label>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+<sub>./src/App.css</sub>
+```css
+input.in-the-red {
+  color: red;
+}
+
+input.in-the-black {
+  color: black;
+}
+
+label.money-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+```
 
 
 
