@@ -611,7 +611,228 @@ in <sub>./src/App.js</sub> let's ...
 <summary>Click here to view solutions for this section</summary>
 
 
-solutions go here
+1. make a `<button>grow</button>` when clicked, doubles in size smoothly and changes its text to 'shrink' (then halves, and changes back to 'grow', etc)
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { isBig: false }
+
+  toggleBig = ()=> this.setState(state => ({ isBig: !state.isBig }))
+  
+  render() {
+    return (
+      <div className="App">
+        <button className={this.state.isBig ? 'grown' : ''}
+                onClick={this.toggleBig}>
+          {this.state.isBig ? 'Shrink' : 'Grow'}
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+<sub>./src/App.scss</sub>
+```scss
+
+button {
+  margin-top: 40px;
+  transition: transform 2s;
+
+  &.grown {
+    transform: scale(2,2);
+  }
+}
+```
+
+or in CSS
+
+<sub>./src/App.css</sub>
+```css
+button {
+  margin-top: 40px;
+  transition: transform 2s;
+}
+
+button.grown {
+  transform: scale(2,2);
+}
+```
+
+2. make an `<input/>` for a number between 10-100 with a step of 10, which renders a circle next to it with that size in pixels, smoothly `transition`ing
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { size: 10 }
+
+  setSize = e => this.setState({
+    size: Math.max( 10, Math.min( 100, 1*e.target.value ) ),
+  })
+  
+  render() {    
+    return (
+      <div className="App">
+        <input value={this.state.size}
+               onChange={this.setSize}
+               type='number'
+               step={10}/>
+        <div style={{
+          height: this.state.size,
+          width: this.state.size,
+          borderRadius: '50%',
+          backgroundColor: 'red',
+          transition: 'height 1s, width 1s',
+        }}/>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+3. make a `<select/>` with `<option/>`s for 5 different colors. The color determines the circle's `backgroundColor`, which `transition`s smoothly
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { size: 10, bgColor: '#f00' }
+
+  setSize = e => this.setState({
+    size: Math.max( 10, Math.min( 100, 1*e.target.value ) ),
+  })
+
+  setBgColor = e => this.setState({ bgColor: e.target.value })
+  
+  render() {    
+    return (
+      <div className="App">
+        <input value={this.state.size}
+               onChange={this.setSize}
+               type='number'
+               step={10}/>
+
+        <select value={this.state.bgColor} onChange={this.setBgColor}>
+          <option value='#f00'>Red</option>
+          <option value='#0f0'>Green</option>
+          <option value='#00f'>Blue</option>
+          <option value='#0ff'>Cyan</option>
+          <option value='#f0f'>Magenta</option>
+          <option value='#ff0'>Yellow</option>
+        </select>
+        
+        <div style={{
+          height: this.state.size,
+          width: this.state.size,
+          borderRadius: '50%',
+          backgroundColor: this.state.bgColor,
+          transition: 'background-color 1s, height 1s, width 1s'
+        }}/>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+4. make a `<button/>` which when clicked, rotates around once
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { angle: 0 }
+
+  spin = ()=> this.setState(state => ({ angle: state.angle + 360 }))
+  
+  render() {
+    const { angle } = this.state;
+    
+    return (
+      <div className="App">
+        <button onClick={this.spin}
+                style={{
+                  transition: 'transition: transform 1s',
+                  transform: `rotate(${angle}deg)`,
+                }}>
+          Spin
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+5. make a `<ul>` of `<li>` names. When the user clicks one, it should expand smoothly and display another line of data (if they like dogs or cats)
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    people: [
+      { name: 'nik', dogsOrCats: 'dogs', selected: false },
+      { name: 'mikey', dogsOrCats: 'cats', selected: false },
+      { name: 'leib', dogsOrCats: 'dogs', selected: false },
+      { name: 'moran', dogsOrCats: 'cats', selected: false },
+    ],
+  }
+
+  selectPerson = index => this.setState(state => ({
+    people: state.people
+                 .map((p, pi)=> pi !== index ? p : ({ ...p, selected: !p.selected }))
+  }) )
+  
+  render() {    
+    return (
+      <div className="App">
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {this.state.people.map(({ name, dogsOrCats, selected }, pi)=>(
+            <li key={name}
+                onClick={()=> this.selectPerson(pi)}
+                style={{
+                  overflow: 'hidden',
+                  backgroundColor: '#eee',
+                  margin: 10,
+                  transition: 'height 1s',
+                  height: selected ? 40 : 20,
+                  cursor: 'pointer',
+                }}>
+              {name}
+              {selected && (
+                 <div>{dogsOrCats}</div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
 
 </details>
 
