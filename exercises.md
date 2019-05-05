@@ -194,10 +194,6 @@ class App extends Component {
         {this.state.word && (
            <span>{this.state.word}</span>
         )}
-        <button className='heard-button'
-                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
-          have you heard?
-        </button>
       </div>
     );
   }
@@ -226,13 +222,6 @@ class App extends Component {
           what's the word?
           <input className="word-input" value={this.state.word} onChange={this.setWord} />
         </label>
-        {this.state.word && (
-           <span>{this.state.word}</span>
-        )}
-        <button className='heard-button'
-                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
-          have you heard?
-        </button>
 
         {this.state.word === 'bird' && (
            <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
@@ -255,31 +244,13 @@ import React, { Component } from 'react';
 import './App.scss';
 
 class App extends Component {
-  state = { word: '', money: 0 }
-
-  setWord = e => this.setState({ word: e.target.value })
-
+  state = { money: 0 }
+  
   setMoney = e => this.setState({ money: 1*e.target.value })
   
   render() {    
     return (
       <div className="App">
-        <label className='word-label'>
-          what's the word?
-          <input className="word-input" value={this.state.word} onChange={this.setWord} />
-        </label>
-        {this.state.word && (
-           <span>{this.state.word}</span>
-        )}
-        <button className='heard-button'
-                onClick={()=> this.state.word && alert(this.state.word+' is the word')}>
-          have you heard?
-        </button>
-
-        {this.state.word === 'bird' && (
-           <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
-        )}
-
         <label className='money-label'>
           $
           <input className={this.state.money < 0 ? 'in-the-red' : 'in-the-black'}
@@ -345,11 +316,265 @@ in <sub>./src/App.js</sub> let's practice using `setState` in our input flow to.
 <summary>Click here to view solutions for this section</summary>
 
 
-solutions go here
+
+1. make an `<input/>` which only allows a-z, A-Z, 0-9 and "_" the underscore character
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { username: '' }
+
+  setUsername = e => this.setState({
+    username: e.target.value.replace(/[^0-9a-zA-Z_]/g, '')
+  })
+  
+  render() {    
+    return (
+      <div className="App">
+        <label>
+          Username
+          <input value={this.state.username} onChange={this.setUsername} />
+        </label>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+2. make an `<input/>` which renders an `<img/>` of a bird when the value is "the word" with a `state` boolean
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { word: '', isBirdTheWord: false }
+
+  setWord = e => this.setState({
+    word: e.target.value,
+    isBirdTheWord: e.target.value === 'bird',
+  })
+  
+  render() {    
+    return (
+      <div className="App">
+        <label>
+          The Word
+          <input value={this.state.word} onChange={this.setWord} />
+        </label>
+        {this.state.isBirdTheWord && (
+           <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
+        )}
+
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+3. make two `<input/>`s, one is always CAPSLOCK, the other is lowercase, and both set eachother's value (keep in sync)
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    yell: '',
+    whisper: '',
+  }
+
+  setText = e => this.setState({
+    yell: e.target.value.toUpperCase(),
+    whisper: e.target.value.toLowerCase(),
+  })
+  
+  render() {    
+    return (
+      <div className="App">
+        <label>
+          YELLING
+          <input value={this.state.yell} onChange={this.setText} />
+        </label>
+        
+        <label>
+          whispering
+          <input value={this.state.whisper} onChange={this.setText} />
+        </label>
+        
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+4. make an `<input/>` with a reset `<button/>` (clicking the button clears the value)... bonus: style the button to be an icon sitting inside the input only when needed
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { username: '' }
+
+  setUsername = e => this.setState({ username: e.target.value })
+
+  reset = ()=> this.setState({ username: '' })
+  
+  render() {    
+    return (
+      <div className="App">
+        <label className='reset-container'>
+          Username
+          <input value={this.state.username} onChange={this.setUsername} />
+          {this.state.username && (
+             <span onClick={this.reset} className='reset-button'>X</span>
+          )}
+        </label>
+
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+<sub>./src/App.scss</sub>
+```scss
+.reset-container {
+  position: relative;
+
+  min-height: 60px;
+  min-width: 100px;
+
+  & input {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 20px;
+    width: calc( 100% - 4px );
+  }
+  
+  & span {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #777;
+    color: white;
+  }
+}
+```
+
+or in CSS
+
+<sub>./src/App.css</sub>
+```css
+.reset-container {
+  position: relative;
+
+  min-height: 60px;
+  min-width: 100px;
+}
+
+.reset-container input {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 20px;
+  width: calc( 100% - 4px );
+}
+
+.reset-container span {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: #777;
+  color: white;
+}
+```
+
+5. make three numerical `<input/>`s, A x B = C... whenever A or B change, change C to the product; when C changes, change A or B to keep equality
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = { A: 0, B: 0, C: 0 }
+
+  setA = e => this.setState({
+    A: 1*e.target.value,
+    C: this.state.B * e.target.value,
+  })
+
+  setB = e => this.setState({
+    B: 1*e.target.value,
+    C: this.state.A * e.target.value,
+  })
+
+  setC = e => this.setState({
+    C: e.target.value,
+    B: !(1*e.target.value) ? 0:
+       this.state.A ? (e.target.value / this.state.A):
+       1,
+    A: 1*e.target.value && !this.state.A ? e.target.value : this.state.A,
+  })
+  
+  render() {
+    return (
+      <div className="App">
+        <label>
+          A
+          <input value={this.state.A} onChange={this.setA} type='number'/>
+        </label>
+
+        <label>
+          * B
+          <input value={this.state.B} onChange={this.setB} type='number'/>
+        </label>
+
+        <label>
+          = C
+          <input value={this.state.C} onChange={this.setC} type='number'/>
+        </label>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+sometimes, when dividing by zero, we have to force the logic to work!
+
+that'll teach you to make up examples with edge cases...
 
 </details>
-
-
 
 
 
