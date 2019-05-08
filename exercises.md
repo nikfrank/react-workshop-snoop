@@ -861,13 +861,15 @@ in <sub>./src/App.js</sub> let's ...
 
 1. make a `<select/>` within a container `<div/>` which determines the `border-color` of its container `<div/>`
 
-2. wrap three other examples from above in container `<div/>`s
+2. wrap three other examples from above in `.solution-container` `<div/>`s, style them with `padding` `margin` and `border` or `box-shadow`
 
-3. wrap our four containers in a `.form-container` which is `display: flex`
+   use `display: flex` on our containers to center the `<input/>`s vertically AND horizontally
+
+3. wrap our four containers in a `.solutions-container` which is `display: flex`
 
 4. make a `<button/>` which toggles our `.form-container` between `flex-direction: column` and `column-reverse`
 
-5. use `display: flex` on our containers to center the `<input/>`s vertically AND horizontally
+5. give each `.solution-container` an `X` button which removes it
 
 
 ### solutions
@@ -876,7 +878,338 @@ in <sub>./src/App.js</sub> let's ...
 <summary>Click here to view solutions for this section</summary>
 
 
-solutions go here
+1. make a `<select/>` within a container `<div/>` which determines the `border-color` of its container `<div/>`
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    currentColor: '#f00',
+  }
+
+  setColor = e => this.setState({ currentColor: e.target.value })
+  
+  render() {    
+    return (
+      <div className="App">
+        <div style={{ border: '2px dotted '+this.state.currentColor, padding: 10 }}>
+          <select value={this.state.currentColor}
+                  onChange={this.setColor}
+                  style={{ outline: 'none' }}>
+            <option value='#f00'>Red</option>
+            <option value='#0f0'>Green</option>
+            <option value='#00f'>Blue</option>
+            <option value='#0ff'>Cyan</option>
+            <option value='#f0f'>Magenta</option>
+            <option value='#ff0'>Yellow</option>
+          </select>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+2. wrap three other examples from above in `.solution-container` `<div/>`s, style them with `padding` `margin` and `border` or `box-shadow`
+
+   use `display: flex` on our containers to center the `<input/>`s vertically AND horizontally
+
+<sub>./src/App.scss</sub>
+```scss
+.solution-container {
+  padding: 10px;
+  margin: 10px;
+
+  min-height: 100px;
+  min-width: 20vw;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  box-shadow:
+    0px 1px 3px 0px rgba(0,0,0,0.2),
+    0px 1px 1px 0px rgba(0,0,0,0.14),
+    0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+```
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+// I picked my favourite examples, any of them will do!
+
+class App extends Component {
+  state = {
+    currentColor: '#f00',
+    angle: 0,
+    word: '',
+    isBirdTheWord: false
+  }
+
+  setWord = e => this.setState({
+    word: e.target.value,
+    isBirdTheWord: e.target.value === 'bird',
+  })
+
+  setText = e => this.setState({
+    yell: e.target.value.toUpperCase(),
+    whisper: e.target.value.toLowerCase(),
+  })
+
+  spin = ()=> this.setState(state => ({ angle: state.angle + 360 }))  
+  setColor = e => this.setState({ currentColor: e.target.value })
+  
+  render() {    
+    return (
+      <div className='App'>
+        <div style={{ border: '2px dotted '+this.state.currentColor }} className='solution-container'>
+          <select value={this.state.currentColor}
+                  onChange={this.setColor}
+                  style={{ outline: 'none' }}>
+            <option value='#f00'>Red</option>
+            <option value='#0f0'>Green</option>
+            <option value='#00f'>Blue</option>
+            <option value='#0ff'>Cyan</option>
+            <option value='#f0f'>Magenta</option>
+            <option value='#ff0'>Yellow</option>
+          </select>
+        </div>
+
+        <div className='solution-container'>
+          <button onClick={this.spin}
+                  style={{
+                    transition: 'transition: transform 1s',
+                    transform: `rotate(${this.state.angle}deg)`,
+                  }}>
+            Spin
+          </button>
+        </div>
+
+        <div className='solution-container'>
+          <label>
+            The Word
+            <input value={this.state.word} onChange={this.setWord} />
+          </label>
+          {this.state.isBirdTheWord && (
+             <img src='https://files.cults3d.com/uploaders/13338795/illustration-file/34f3e8d2-6ff0-4fd5-adc1-e67936f5defd/CASACOMUNISTAS_large.png'/>
+          )}
+        </div>
+
+        <div className='solution-container'>
+          <label>
+            YELLING
+            <input value={this.state.yell} onChange={this.setText} />
+          </label>
+
+          <hr/>
+          
+          <label>
+            whispering
+            <input value={this.state.whisper} onChange={this.setText} />
+          </label>
+          
+        </div>
+
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+3. wrap our four containers in a `.solutions-container` which is `display: flex`
+
+
+<sub>./src/App.scss</sub>
+```scss
+.solutions-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+```
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  //...
+  
+  render() {
+    return (
+      <div className='App solutions-container'>
+        //...
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+this is a good opportunity to toy around with the `justify-content` `align-items` `flex-wrap` and `flex-direction` rules for the flex container
+
+and `flex-grow` `align-self` on the children.
+
+
+
+4. make a `<button/>` which toggles our `.solutions-container` between `flex-direction: column` and `column-reverse`
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    //...
+    
+    direction: 'column',
+  }
+
+  toggleDirection = ()=> this.setState(state => ({
+    direction: state.direction.includes('reverse')? 'column' : 'column-reverse',
+  }) )
+
+  //...
+
+  render() {    
+    return (
+      <div className='App solutions-container'
+           style={{ flexDirection: this.state.direction }}>
+        <button onClick={this.toggleDirection}>CHANGE PLACES</button>
+
+        //...
+        
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+
+5. give each `.solution-container` an `X` button which removes it
+
+<sub>./src/App.scss</sub>
+```scss
+.solution-container {
+  //...
+
+  position: relative;
+  
+  .remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    height: 18px;
+    width: 15px;
+
+    background-color: #eee;
+    border: 1px solid black;
+    border-radius: 3px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ddd;
+    }
+
+    &:active {
+      background-color: #888;
+    }
+  }
+}
+
+```
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    //...
+    
+    removed: [],
+  }
+
+  remove = i => this.setState(state => ({ removed: state.removed.concat(i) }) )
+
+  //...
+  
+  render() {    
+    return (
+      <div className='App solutions-container'
+           style={{ flexDirection: this.state.direction }}>
+        <button onClick={this.toggleDirection}>CHANGE PLACES</button>
+        
+        <div className='solution-container'
+             style={{
+               border: '2px dotted '+this.state.currentColor,
+               display: this.state.removed.includes(0) ? 'none' : undefined
+             }}>
+          <div className='remove' onClick={()=> this.remove(0)}>X</div>
+          
+          //...
+        </div>
+
+        <div className='solution-container'
+             style={{
+               display: this.state.removed.includes(1) ? 'none' : undefined
+             }}>
+          <div className='remove' onClick={()=> this.remove(1)}>X</div>
+
+          //...
+        </div>
+
+        <div className='solution-container'
+             style={{
+               display: this.state.removed.includes(2) ? 'none' : undefined
+             }}>
+          <div className='remove' onClick={()=> this.remove(2)}>X</div>
+          
+          //...
+        </div>
+
+        <div className='solution-container'
+             style={{
+               display: this.state.removed.includes(3) ? 'none' : undefined
+             }}>
+          <div className='remove' onClick={()=> this.remove(3)}>X</div>
+
+          //...          
+        </div>
+
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+I've done this using `display: none` to not display something. However, there are many other good solutions (like conditional rendering!)
+
 
 </details>
 
