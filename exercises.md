@@ -1222,6 +1222,29 @@ I've done this using `display: none` to not display something. However, there ar
 
 ## lists: map and filter
 
+Enough of this doing one thing at a time. Doing a bunch of stuff at once is way more efficient (aka we can afford to be lazy)
+
+the two top questions everyone ever has when learning a new rendering language are:
+
+- how do I do conditionals?
+- how do I do loops?
+
+conditionals we've seen already React's breakouts with ternary operators
+
+`{(some booleanish expression) ? (<WhenItWasTruthy/>) : (<WhenItWasFalsy/>)}`
+
+loops also use breakouts, but now we'll use `.map` to turn some array into an array of `<Jsx/>` tags
+
+`{[1,2,3,4].map(n => (<div key={n}>{n}</div>) )}`
+
+
+and we can use the familiar `.map` `.filter` `.reduce` chaining logic (also `.slice` if you're feeling saucy)
+
+
+### exercises
+
+in <sub>./src/App.js</sub> let's ...
+
 1. make an `[]` array of `'names'` in `state` and use `.map  => <li>` to render them
 
 2. make an `[]` array of `{}` objects with `{ name: ... }` in `state` and use `.map` to render them
@@ -1235,34 +1258,19 @@ I've done this using `display: none` to not display something. However, there ar
 
 
 
----
-
-## exercise topic
-
-spiel on topic for a bit, put some links to learn about the topic
-
-
-### exercises
-
-in <sub>./src/App.js</sub> let's ...
-
-1. 
-
-2. 
-
-3. 
-
-4. 
-
-5. 
-
-
 ### solutions
 
 <details>
 <summary>Click here to view solutions for this section</summary>
 
+1. make an `[]` array of `'names'` in `state` and use `.map  => <li>` to render them
 
-solutions go here
+2. make an `[]` array of `{}` objects with `{ name: ... }` in `state` and use `.map` to render them
+
+3. in your `render` function, chain a `.filter` before the `.map` to render only names with an 'n' in them
+
+4. make a toggler `<button/>` which turns the `.filter` behaviour on / off
+
+5. filter out items without `.filter` by setting `height: 0` and transition their height (smooth filtering!)
 
 </details>
