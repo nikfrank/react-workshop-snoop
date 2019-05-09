@@ -1247,7 +1247,7 @@ in <sub>./src/App.js</sub> let's ...
 
 1. make an `[]` array of `'names'` in `state` and use `.map  => <li>` to render them
 
-2. make an `[]` array of `{}` objects with `{ name: ... }` in `state` and use `.map` to render them
+2. make an `[]` array of `{}` objects with `{ name: '...', bgImage: '...' }` in `state` and use `.map` to render them
 
 3. in your `render` function, chain a `.filter` before the `.map` to render only names with an 'n' in them
 
@@ -1265,12 +1265,302 @@ in <sub>./src/App.js</sub> let's ...
 
 1. make an `[]` array of `'names'` in `state` and use `.map  => <li>` to render them
 
-2. make an `[]` array of `{}` objects with `{ name: ... }` in `state` and use `.map` to render them
+<sub>./src/App.scss</sub>
+```scss
+ul.names {
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 10px;
+    margin: 10px;
+
+    min-height: 100px;
+    min-width: 20vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    box-shadow:
+      0px 1px 3px 0px rgba(0,0,0,0.2),
+      0px 1px 1px 0px rgba(0,0,0,0.14),
+      0px 2px 1px -1px rgba(0,0,0,0.12);
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+}
+```
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    names: ['nik', 'sam', 'leib', 'mikey', 'moran']
+  }
+
+  render() {
+    return (
+      <div className='App'>
+        <ul className='names'>
+          {this.state.names.map(name=> (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+presumably you'll put names of you and your friends though!
+
+
+
+2. make an `[]` array of `{}` objects with `{ name: '...', bgImage: '...' }` in `state` and use `.map` to render them
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    names: [
+      { name: 'nik', bgImage: 'https://i.redd.it/1cykjmm2acu21.jpg' },
+      { name: 'sam', bgImage: 'https://i.redd.it/8vsdt0ac94f21.jpg' },
+      { name: 'leib', bgImage: 'https://i.redd.it/g96dxe2fdnx11.jpg' },
+      { name: 'mikey', bgImage: 'https://i.redd.it/a7hx7hmgpsp01.jpg' },
+      { name: 'moran', bgImage: 'https://i.redd.it/anvgr0hm1siz.jpg' }
+    ]
+  }
+
+  render() {
+    return (
+      <div className='App'>
+        <ul className='names'>
+          {this.state.names.map(({ name, bgImage })=> (
+            <li key={name} style={{ background: `url(${bgImage})`}}>{name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+<sub>./src/App.scss</sub>
+```scss
+ul.names {
+  //...
+
+  li {
+    //...
+
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+    text-shadow: -1.5px -1.5px 0 #000,
+		 1.5px -1.5px 0 #000,
+		 -1.5px 1.5px 0 #000,
+		 1.5px 1.5px 0 #000;    
+  }
+}
+
+```
+
+here I've used a trick I learned from movie subtitles for the text... use a light `color` and add a dark `text-shadow` and it'll be visible against any background 
+
 
 3. in your `render` function, chain a `.filter` before the `.map` to render only names with an 'n' in them
 
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    names: [
+      { name: 'nik', bgImage: 'https://i.redd.it/1cykjmm2acu21.jpg' },
+      { name: 'sam', bgImage: 'https://i.redd.it/8vsdt0ac94f21.jpg' },
+      { name: 'leib', bgImage: 'https://i.redd.it/g96dxe2fdnx11.jpg' },
+      { name: 'mikey', bgImage: 'https://i.redd.it/a7hx7hmgpsp01.jpg' },
+      { name: 'moran', bgImage: 'https://i.redd.it/anvgr0hm1siz.jpg' }
+    ]
+  }
+
+  render() {
+    return (
+      <div className='App'>
+        <ul className='names'>
+          {this.state.names
+               .filter(({ name })=> name.includes('n'))
+               .map(({ name, bgImage })=> (
+                 <li key={name} style={{ background: `url(${bgImage})`}}>{name}</li>
+               ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+
 4. make a toggler `<button/>` which turns the `.filter` behaviour on / off
 
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    names: [
+      { name: 'nik', bgImage: 'https://i.redd.it/1cykjmm2acu21.jpg' },
+      { name: 'sam', bgImage: 'https://i.redd.it/8vsdt0ac94f21.jpg' },
+      { name: 'leib', bgImage: 'https://i.redd.it/g96dxe2fdnx11.jpg' },
+      { name: 'mikey', bgImage: 'https://i.redd.it/a7hx7hmgpsp01.jpg' },
+      { name: 'moran', bgImage: 'https://i.redd.it/anvgr0hm1siz.jpg' }
+    ],
+
+    filter: true,
+  }
+
+  toggleFilter = ()=> this.setState(state => ({ filter: !state.filter }))
+
+  render() {
+    return (
+      <div className='App'>
+        <button onClick={this.toggleFilter}>
+          Filter is {this.state.filter ? 'on' : 'off'}
+        </button>
+        <ul className='names'>
+          {this.state.names
+               .filter(({ name })=> (!this.state.filter || name.includes('n')))
+               .map(({ name, bgImage })=> (
+                 <li key={name} style={{ background: `url(${bgImage})`}}>{name}</li>
+               ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+
+
 5. filter out items without `.filter` by setting `height: 0` and transition their height (smooth filtering!)
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.scss';
+
+class App extends Component {
+  state = {
+    names: [
+      { name: 'nik', bgImage: 'https://i.redd.it/1cykjmm2acu21.jpg' },
+      { name: 'sam', bgImage: 'https://i.redd.it/8vsdt0ac94f21.jpg' },
+      { name: 'leib', bgImage: 'https://i.redd.it/g96dxe2fdnx11.jpg' },
+      { name: 'mikey', bgImage: 'https://i.redd.it/a7hx7hmgpsp01.jpg' },
+      { name: 'moran', bgImage: 'https://i.redd.it/anvgr0hm1siz.jpg' }
+    ],
+
+    filter: true,
+  }
+
+  toggleFilter = ()=> this.setState(state => ({ filter: !state.filter }))
+
+  render() {
+    return (
+      <div className='App'>
+        <button onClick={this.toggleFilter}>
+          Filter is {this.state.filter ? 'on' : 'off'}
+        </button>
+        <ul className='names'>
+          {this.state.names
+               .map(({ name, bgImage })=> (
+                 <li key={name}
+                     className={(!this.state.filter || name.includes('n')) ? '' : 'filtered'}
+                     style={{ background: `url(${bgImage})` }}>
+                   {name}
+                 </li>
+               ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+
+<sub>./src/App.scss</sub>
+```scss
+ul.names {
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 10px;
+    margin: 10px;
+
+    height: 100px;
+    min-width: 20vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+    text-shadow: -1.5px -1.5px 0 #000,
+		 1.5px -1.5px 0 #000,
+		 -1.5px 1.5px 0 #000,
+		 1.5px 1.5px 0 #000;
+    
+    box-shadow:
+      0px 1px 3px 0px rgba(0,0,0,0.2),
+      0px 1px 1px 0px rgba(0,0,0,0.14),
+      0px 2px 1px -1px rgba(0,0,0,0.12);
+      
+    overflow: hidden;
+    transition: height 1s, min-height 1s, padding 1s, margin 1s;
+    
+    &:hover {
+      background-color: #eee;
+    }
+
+    &.filtered {
+      padding: 0;
+      margin: 0;
+      height: 0;
+    }
+  }
+}
+```
+
+
 
 </details>
