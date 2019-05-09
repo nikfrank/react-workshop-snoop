@@ -269,6 +269,7 @@ class App extends Component {
   render() {
     // reading from state
     const hat = this.state.hat;
+    const eyes = this.state.eyes;
     const skin = this.state.skin;
     const mouth = this.state.mouth;
     const hatText = this.state.hatText;
@@ -343,7 +344,7 @@ to get paid, we're gonna need to
 
 2. refactor the `// reading from state` section to use [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) into one line of code
 
-3. put a character limit on the hat text (so it can't overflow the hat!)
+3. put a character limit on the hat text (so it can't overflow the hat!) within an existing line of code
 
 4. use an Object like `{ [hashColor]: 'color name', ...}` to render the names of the colors into the dropdowns
 
@@ -352,13 +353,109 @@ to get paid, we're gonna need to
 6. learn about [SVG](https://www.w3schools.com/graphics/svg_intro.asp) [in react](https://css-tricks.com/creating-svg-icon-system-react/) and make the avatar less fuuuuuugly!
 
 
+
 ### solutions
 
 <details>
 <summary>Click here to view solutions for this section</summary>
 
+1. `<label>` each of the form inputs (that includes the `<select/>`s!), arrange them in a column
 
-solutions go here
+<sub>./src/App.js</sub>
+```js
+          <label>
+            <span>Hat Color</span>
+            <select value={hat} onChange={this.setHat}>
+              {colors.map((color, i)=>(
+                <option key={i} style={{ backgroundColor: color }} value={color}>{color}</option>
+              ))}
+            </select>
+          </label>
+//...
+```
+
+to get the `<label/>`s to arrange in a column, all we have to do is make them `display: block`
+
+<sub>./src/App.css</sub>
+```css
+label {
+  display: block;
+}
+```
+
+2. refactor the `// reading from state` section to use [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) into one line of code
+
+<sub>./src/App.js</sub>
+```js
+  const { hat, eyes, skin, mouth, hatText, hatTextColor } = this.state;
+```
+
+3. put a character limit on the hat text (so it can't overflow the hat!) within an existing line of code
+
+<sub>./src/App.js</sub>
+```js
+  setHatText = e => this.setState({ hatText: e.target.value.slice(0, 12) })
+```
+
+
+4. use an Object like `{ [hashColor]: 'color name', ...}` to render the names of the colors into the dropdowns
+
+<sub>./src/App.js</sub>
+```js
+//...
+
+const colorNames = {
+  '#f00': 'Red',
+  '#0f0': 'Green',
+  '#00f': 'Blue',
+  '#0ff': 'Cyan',
+  '#f0f': 'Magenta',
+  '#ff0': 'Yellow',
+  '#000': 'Black',
+  '#fff': 'White',
+  '#fda': 'Beige',
+};
+
+//...
+
+            <select value={hat} onChange={this.setHat}>
+              {colors.map((color, i)=>(
+                <option key={i} style={{ backgroundColor: color }} value={color}>{colorNames[color]}</option>
+              ))}
+            </select>
+
+```
+
+5. if the avatar is wearing a trump hat, turn the avatar's eyes `red` and skin `green`
+
+<sub>./src/App.js</sub>
+```js
+//...
+
+  setHat = e => this.setState({ hat: e.target.value }, this.checkMaga)
+  setSkin = e => this.setState({ skin: e.target.value })
+  setEyes = e => this.setState({ eyes: e.target.value })
+  setMouth = e => this.setState({ mouth: e.target.value })
+  setHatText = e => this.setState({ hatText: e.target.value.slice(0, 12) }, this.checkMaga)
+  setHatTextColor = e => this.setState({ hatTextColor: e.target.value }, this.checkMaga)
+
+  checkMaga = ()=>{
+    if( this.state.hat === '#f00' &&
+        this.state.hatText === 'MAGA' &&
+        this.state.hatTextColor === '#fff' &&
+        (this.state.eyes !== '#f00' || this.state.skin !== '#0f0')) {
+      this.setState({ eyes: '#f00', skin: '#0f0' })
+    }
+  }
+//...
+```
+
+I've used the callback parameter to the `setState` function here to reuse the `checkMaga` instance method
+
+
+6. learn about [SVG](https://www.w3schools.com/graphics/svg_intro.asp) [in react](https://css-tricks.com/creating-svg-icon-system-react/) and make the avatar less fuuuuuugly!
+
+No solution provided...
 
 </details>
 
@@ -431,57 +528,3 @@ solutions go here
 
 </details>
 
-
-
-
-
----
-
-## logging in
-
-we've taken over an app which , but the legacy code is full of bugs!
-
-here's the code we have
-
-<sub>./src/App.js</sub>
-```js
-import React, { Component } from 'react';
-import 'App.css';
-
-class App extends Component {
-  state = {
-  }
-
-  render(){
-    return (
-      <div className='App'>
-      </div>
-    );
-  }
-};
-
-export default App;
-```
-
-to get paid, we're gonna need to
-
-1. 
-
-2. 
-
-3. 
-
-4. 
-
-5. 
-
-
-### solutions
-
-<details>
-<summary>Click here to view solutions for this section</summary>
-
-
-solutions go here
-
-</details>
