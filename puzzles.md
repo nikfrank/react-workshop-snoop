@@ -73,8 +73,164 @@ to get paid, we're gonna need to
 <details>
 <summary>Click here to view solutions for this section</summary>
 
+1. fix all the syntax errors
+2. fix all the lexical scoping bugs, and any error that shows up on the console
 
-solutions go here
+here we need to read the values out of the state, and make sure we read our instance methods from `this`
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.css';
+
+class App extends Component {
+  state = {
+    username: '', password: '',
+  }
+
+  setUsername = username=> this.setState(username)
+  setPassword = password=> this.setState(password)
+  setEmail = email=> this.setState(email)
+  
+  render(){
+    const { username, password, email } = this.state;
+    
+    return (
+      <div className='App'>
+        <label>
+          Username
+          <input value={username} onChange={this.setUsername} />
+        </label>
+
+        <label>
+          Password
+          <input value={password} onChange={this.setPassword} />
+        </label>
+        
+        <label>
+          Email
+          <input value={email} onChange={this.setEmail} />
+        </label>
+
+        <button onClick={this.signup}>Sign Up!</button>
+      </div>
+    );
+  }
+};
+
+export default App;
+
+```
+
+
+3. fix the inputs... I don't think they work right now!
+
+here we had two bugs: first, we weren't reading the `.target.value` out of the `event`
+
+to fix it, I've used parameter destructuring,
+
+`setWhatever = ({ target: { value: whatever }})=> this.setState({ whatever })`
+
+though it can be done the more familiar way
+
+`setWhatever = e => this.setState({ whatever: e.target.value })`
+
+
+second, we weren't writing to the `state` correctly!
+
+we had `this.setState(username)` instead of `this.setState({ username })`
+
+the difference is that in the buggy code, we aren't passing an object to `setState`...
+
+if we only pass some value to `setState` it won't get saved to `state.anything`
+
+`setState` only knows `state.where` to save a value because we pass in an object
+
+eg in `this.setState({ username: 'nik' })` we're passing `{ username: 'nik' }` as a param
+
+to solve this issue, I've taken advantage of the ES6 object literal shortcut
+
+`{ username: username }` can be rewritten as `{ username }`
+
+
+<sub>./src/App.js</sub>
+```js
+import React, { Component } from 'react';
+import './App.css';
+
+class App extends Component {
+  state = {
+    username: '',
+    password: '',
+    email: '',
+  }
+
+  setUsername = ({ target: { value: username }})=> this.setState({ username })
+  setPassword = ({ target: { value: password }})=> this.setState({ password })
+  setEmail = ({ target: { value: email }})=> this.setState({ email })
+  
+  render(){
+    const { username, password, email } = this.state;
+    
+    return (
+      <div className='App'>
+        <label>
+          Username
+          <input value={username} onChange={this.setUsername} />
+        </label>
+
+        <label>
+          Password
+          <input value={password} onChange={this.setPassword} />
+        </label>
+        
+        <label>
+          Email
+          <input value={email} onChange={this.setEmail} />
+        </label>
+
+        <button onClick={this.signup}>Sign Up!</button>
+      </div>
+    );
+  }
+};
+
+export default App;
+
+```
+
+lastly, we get an error on the console because we didn't initialize `email` in the `state`
+
+
+4. Hide the password while the user is typing it!
+
+<sub>./src/App.js</sub>
+```js
+//...
+          <input value={password} onChange={this.setPassword} type='password'/>
+//...
+```
+
+all we need to do here is put `type='password'` on our `<input/>`
+
+
+5. when the user clicks sign up (and has put in a username email and password), navigate to a funny youtube video
+
+<sub>./src/App.js</sub>
+```js
+//...
+
+  signup = ()=> (
+    this.state.username &&
+    this.state.password &&
+    this.state.email
+  ) && ( window.location.href = 'https://www.youtube.com/watch?v=F3c_-dde-wo' )
+
+//...
+```
+
+all we need to do here is wite our `this.signup` function
+
 
 </details>
 
