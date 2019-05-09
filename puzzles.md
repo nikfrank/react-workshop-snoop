@@ -477,7 +477,7 @@ class App extends Component {
   state = {
     players: [
       { name: 'roofus', age: 18, rating: 980 },
-      { name: 'doofus', age: 19, rating 1279 },
+      { name: 'doofus', age: 19, rating: 1279 },
       { name: 'garry', age: 25, rating: 2886 },
       { name: 'jose', age: 92, rating: 2877 },
       { name: 'bobby', age: 47, rating: 2895 },
@@ -491,7 +491,7 @@ class App extends Component {
       <div className='App'>
         <ul>
           {players
-            .filter(player=> student.age < minAge)
+            .filter(player=> player.age < minAge)
             .map(player=> (
               <li key={player.name}>{player.name} - age {player.age}</li>
             )
@@ -507,7 +507,7 @@ export default App;
 
 to get paid, we're gonna need to
 
-1. fix all the lexical scoping bugs
+1. fix all the lexical scoping bugs (in one line of code)
 
 2. fix the feature bug
 
@@ -523,8 +523,79 @@ to get paid, we're gonna need to
 <details>
 <summary>Click here to view solutions for this section</summary>
 
+1. fix all the lexical scoping bugs (in one line of code)
 
-solutions go here
+<sub>./src/App.js</sub>
+```js
+//...
+
+  render(){
+    const { players, minAge } = this.state;
+
+//...
+```
+
+2. fix the feature bug
+
+<sub>./src/App.js</sub>
+```js
+            .filter(player=> player.age > minAge)
+```
+
+3. in one line of code, use `.sort` to rank the players by `age` or `rating`
+
+<sub>./src/App.js</sub>
+```js
+            .sort((a, b)=> a.age > b.age ? 1 : -1)
+```
+
+<sub>./src/App.js</sub>
+```js
+            .sort((a, b)=> a.rating > b.rating ? 1 : -1)
+```
+
+4. in one line of code, filter out players with ratings less than 2000
+
+<sub>./src/App.js</sub>
+```js
+            .filter(player=> player.rating > 2000)
+```
+
+5. remove all `.filter` calls; reimplement `age` or `rating` filters using CSS's `z-index`
+
+<sub>./src/App.js</sub>
+```js
+  render(){
+    const { players, minAge } = this.state;
+    
+    return (
+      <div className='App'>
+        <ul>
+          {players
+            .sort((a, b)=> a.age > b.age ? 1 : -1)
+            .map(player=> (
+              <li key={player.name}
+                  style={{ position: 'relative', zIndex: player.rating }}>
+                {player.name} - age {player.age}
+              </li>
+            )
+            )}
+        </ul>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          zIndex: 2000,
+          backgroundColor: 'white'
+        }}/>
+      </div>
+    );
+  }
+```
+
+though that's really silly eh
 
 </details>
 
