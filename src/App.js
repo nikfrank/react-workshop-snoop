@@ -29,6 +29,7 @@ class App extends Component {
     topAlbum: null,
     topAlbumOpen: false,
     topRapper: rappers[3],
+    rapperSpinning: false,
     startDate: null,
     countryQuery: '',
     selectableCountries: [],
@@ -72,12 +73,20 @@ class App extends Component {
   selectCountry = country => this.setState({ country, selectableCountries: [], countryQuery: country })
 
   setStartDate = startDate => this.setState({ startDate })
+
+  spinRapper = ()=> this.setState({ rapperSpinning: true }, ()=>{
+    setTimeout(()=> this.setState({ rapperSpinning: false }), 2000)
+  })
   
   render(){
     return (
       <div className='App'>
         <div className='header'>
-          <img src={this.state.topRapper.imgSrc} alt={this.state.topRapper.name}/>
+          <img src={this.state.topRapper.imgSrc}
+               className={this.state.rapperSpinning ? 'spinning' : ''}
+               onClick={this.spinRapper}
+               alt={this.state.topRapper.name}/>
+          
           <ul className='hover-dropdown'>
             <li key='top item'>{this.state.topRapper.name}</li>
             {rappers.map(rapper=>(

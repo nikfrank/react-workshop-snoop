@@ -353,3 +353,13 @@ ul.selectable-countries li:hover {
   color: green;
   font-size: 12px;  
 }
+
+
+@keyframes spinning {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+}
+
+.spinning {
+  animation: spinning 2s forwards infinite;
+}

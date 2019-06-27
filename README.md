@@ -1990,6 +1990,10 @@ To make our life easy, we're not going to build a datepicker from scratch - that
 
 Instead, we're going to use [Hacker0x01's popular react-datepicker module](https://github.com/Hacker0x01/react-datepicker)
 
+`$ npm install -S react-datepicker`
+
+or
+
 `$ yarn add react-datepicker`
 
 the react-datepicker docs should give you all you need to pick a date and put it in the state!
