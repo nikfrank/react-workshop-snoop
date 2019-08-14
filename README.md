@@ -14,7 +14,7 @@ Agenda:
 
 ## getting started
 
-`$ create-react-app snoop-jobs`
+`$ npx create-react-app snoop-jobs`
 
 `$ cd snoop-jobs`
 
