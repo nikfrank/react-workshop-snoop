@@ -2128,14 +2128,14 @@ Snoop говорит: "Gangsters use the dev tools"
 
 следующая часть материала более сложная
 <a name="step4"></a>
-## step 4: and it's gotta be bumpin - refactor to components
+## step 4: and it's gotta be bumpin - рефакторинг к компонентам
 
-### rapper images, menu dropdown
+### картинки реперов, выпадающее меню
 ### floating label input
-### image dropdown
-### autocomplete dropdown
+### выпадающее меню с картинками
+### выпадающее меню  автозаполнением
 ### SCSS
-### destructuring this.state in render
+### деструкция(destructuring) this.state в выводе
 
 
 <a name="step5"></a>
