@@ -3,6 +3,8 @@
 
 Snoop wants us to build him a job application form, and he wants it to be **fresh**
 
+курс доступен на русском языке [здесь](https://github.com/nikfrank/react-workshop-snoop/blob/master/README_RU.md)
+
 Agenda:
 
 - [step 1: on the button](#step1)
